@@ -85,7 +85,8 @@
 
     /* ── HERO ──────────────────────────────── */
     .hero{
-      background: linear-gradient(160deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 60%, #000) 100%);
+      background: linear-gradient(160deg, rgba(0,0,0,.58) 0%, rgba(0,0,0,.75) 100%),
+                  url("https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=1920&q=80") center/cover no-repeat;
       color:#fff; padding:80px 24px 90px; text-align:center;
       position:relative; overflow:hidden;
     }
@@ -283,6 +284,31 @@
     .area-tag{
       background:var(--white); border:1px solid var(--border);
       padding:6px 14px; border-radius:50px; font-size:.85em; color:var(--muted);
+    }
+
+    /* ── GALLERY ────────────────────────────── */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+    .gallery-item{
+      position:relative; border-radius:var(--radius); overflow:hidden;
+      aspect-ratio:4/3; background:#eee;
+    }
+    .gallery-item img{
+      width:100%; height:100%; object-fit:cover;
+      transition:transform .4s ease;
+    }
+    .gallery-item:hover img{ transform:scale(1.05) }
+    .gallery-caption{
+      position:absolute; bottom:0; left:0; right:0;
+      background:linear-gradient(transparent, rgba(0,0,0,.65));
+      color:#fff; padding:28px 14px 12px;
+      font-size:.82em; font-weight:600;
+    }
+    @media(max-width:640px){
+      .gallery-grid{ grid-template-columns:1fr 1fr; gap:10px }
     }
 
     /* ── FAQ ─────────────────────────────────── */
@@ -500,6 +526,30 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <div class="section-inner">
+    <div class="center">
+      <div class="section-tag">Our Work</div>
+      <h2 class="section-title">See the Quality for Yourself</h2>
+      <p class="section-sub">Real work, real results — from jobs we've completed right here in Salt Lake City.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80" alt="Lawn mowing and edging" loading="lazy">
+        <div class="gallery-caption">Lawn mowing and edging</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1585320806297-9794b3e4aaae?auto=format&fit=crop&w=800&q=80" alt="Landscape design and maintenance" loading="lazy">
+        <div class="gallery-caption">Landscape design and maintenance</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://images.unsplash.com/photo-1591857177-aa3da4a7bb44?auto=format&fit=crop&w=800&q=80" alt="Seasonal cleanup and care" loading="lazy">
+        <div class="gallery-caption">Seasonal cleanup and care</div>
+      </div></div>
   </div>
 </section>
 
