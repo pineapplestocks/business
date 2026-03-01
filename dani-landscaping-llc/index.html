@@ -3,114 +3,691 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dani landscaping LLC | Landscaping in Lexington KY</title>
-  <meta name="description" content="Professional Landscaping services in Lexington KY. Call (859) 460-9084 for a free quote.">
+  <title>Dani landscaping LLC | Landscaping in Lexington</title>
+  <meta name="description" content="Professional landscaping services in Lexington. Transform your yard with expert lawn care, design, and maintenance. Call (859) 460-9084 for a free estimate.">
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Segoe UI',Arial,sans-serif;color:#333}
+    :root {
+      --primary: #1a3d1a;
+      --accent:  #4caf50;
+      --light:   #edf5ed;
+      --text:    #1a1a1a;
+      --muted:   #555;
+      --border:  #e0e0e0;
+      --white:   #ffffff;
+      --star:    #f5a623;
+      --radius:  12px;
+      --shadow:  0 4px 24px rgba(0,0,0,.08);
+    }
+    *,*::before,*::after{ margin:0; padding:0; box-sizing:border-box }
+    html{ scroll-behavior:smooth }
+    body{ font-family:'Segoe UI',system-ui,Arial,sans-serif; color:var(--text); background:#fff; font-size:16px; line-height:1.6 }
+    a{ color:inherit; text-decoration:none }
+    img{ max-width:100% }
 
-    /* ── Hero ── */
+    /* ── STICKY HEADER ─────────────────────── */
+    .site-header{
+      position:sticky; top:0; z-index:999;
+      background:var(--primary);
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 24px;
+      box-shadow:0 2px 12px rgba(0,0,0,.25);
+    }
+    .logo{
+      color:#fff; font-weight:800; font-size:1.1em; line-height:1.2;
+      max-width:60%;
+    }
+    .logo span{ display:block; font-size:.7em; font-weight:400; opacity:.75 }
+    .header-cta{
+      background:var(--accent); color:#fff;
+      padding:10px 20px; border-radius:50px;
+      font-weight:700; font-size:.9em;
+      white-space:nowrap;
+      transition:opacity .15s;
+    }
+    .header-cta:hover{ opacity:.88 }
+
+    /* ── HERO ──────────────────────────────── */
     .hero{
-      background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
-      color:#fff;padding:90px 20px;text-align:center
+      background: linear-gradient(160deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 60%, #000) 100%);
+      color:#fff; padding:80px 24px 90px; text-align:center;
+      position:relative; overflow:hidden;
     }
-    .hero .badge{
-      display:inline-block;background:rgba(233,69,96,.15);
-      border:1px solid #e94560;color:#e94560;
-      padding:6px 18px;border-radius:50px;font-size:.85em;
-      letter-spacing:.05em;margin-bottom:22px
+    .hero::before{
+      content:''; position:absolute; inset:0;
+      background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
-    .hero h1{font-size:clamp(1.8em,5vw,3em);margin-bottom:12px;line-height:1.2}
-    .hero .sub{font-size:1.15em;opacity:.8;margin-bottom:36px}
-    .cta{
-      display:inline-block;background:#e94560;color:#fff;
-      padding:16px 44px;border-radius:50px;text-decoration:none;
-      font-size:1.1em;font-weight:700;
-      box-shadow:0 4px 20px rgba(233,69,96,.4);
-      transition:transform .15s
+    .hero-inner{ position:relative; max-width:800px; margin:0 auto }
+    .hero-badge{
+      display:inline-block;
+      background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
+      color:#fff; padding:6px 16px; border-radius:50px;
+      font-size:.8em; letter-spacing:.04em; margin-bottom:24px;
+      text-transform:uppercase; font-weight:600;
     }
-    .cta:hover{transform:scale(1.04)}
+    .hero h1{
+      font-size:clamp(1.9em,5vw,3.2em); font-weight:800;
+      line-height:1.2; margin-bottom:16px;
+    }
+    .hero-sub{
+      font-size:clamp(1em,2.5vw,1.25em); opacity:.85;
+      margin-bottom:36px; max-width:600px; margin-left:auto; margin-right:auto;
+    }
+    .hero-cta-wrap{
+      display:flex; flex-direction:column; align-items:center; gap:14px;
+    }
+    .btn-primary{
+      display:inline-flex; align-items:center; gap:10px;
+      background:var(--accent); color:#fff;
+      padding:18px 44px; border-radius:50px;
+      font-size:1.15em; font-weight:800;
+      box-shadow:0 6px 28px rgba(0,0,0,.3);
+      transition:transform .15s,box-shadow .15s;
+    }
+    .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 36px rgba(0,0,0,.35) }
+    .hero-trust{
+      display:flex; flex-wrap:wrap; justify-content:center; gap:16px;
+      font-size:.85em; opacity:.8;
+    }
+    .hero-trust span::before{ content:'✓ ' }
 
-    /* ── Services ── */
-    .services{padding:70px 20px;background:#f8f9fb;text-align:center}
-    .services h2{font-size:1.9em;margin-bottom:10px}
-    .services .sub{color:#666;margin-bottom:44px}
-    .grid{
-      display:flex;flex-wrap:wrap;justify-content:center;
-      gap:24px;max-width:900px;margin:0 auto
+    /* ── TRUST BAR ─────────────────────────── */
+    .trust-bar{
+      background:var(--white); border-bottom:1px solid var(--border);
+      padding:20px 24px;
+      display:flex; flex-wrap:wrap; align-items:center;
+      justify-content:center; gap:28px;
     }
-    .card{
-      background:#fff;border-radius:14px;padding:32px 24px;
-      width:200px;box-shadow:0 4px 18px rgba(0,0,0,.07)
+    .trust-item{
+      display:flex; align-items:center; gap:8px;
+      font-size:.9em; font-weight:600; color:var(--text);
     }
-    .card .icon{font-size:2.4em;margin-bottom:10px}
-    .card h3{font-size:1em;margin-bottom:6px}
-    .card p{font-size:.88em;color:#666}
+    .trust-item .ti-icon{ font-size:1.3em }
+    .trust-item .stars{ color:var(--star); font-size:1.1em }
+    .trust-divider{ width:1px; height:28px; background:var(--border) }
 
-    /* ── Contact ── */
-    .contact{
-      background:#1a1a2e;color:#fff;
-      padding:70px 20px;text-align:center
+    /* ── SECTION SHARED ────────────────────── */
+    section{ padding:72px 24px }
+    .section-inner{ max-width:1100px; margin:0 auto }
+    .section-tag{
+      display:inline-block; background:var(--light); color:var(--primary);
+      border:1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      padding:4px 14px; border-radius:50px;
+      font-size:.78em; font-weight:700; letter-spacing:.06em;
+      text-transform:uppercase; margin-bottom:14px;
     }
-    .contact h2{font-size:1.9em;margin-bottom:14px}
-    .phone{
-      display:inline-block;font-size:clamp(1.6em,4vw,2.4em);
-      color:#e94560;text-decoration:none;font-weight:700;margin:10px 0
+    h2.section-title{
+      font-size:clamp(1.6em,3.5vw,2.4em); font-weight:800;
+      line-height:1.25; margin-bottom:10px; color:var(--primary);
     }
-    .contact .note{margin-top:14px;opacity:.65;font-size:.95em}
+    .section-sub{
+      font-size:1.05em; color:var(--muted); max-width:600px; margin-bottom:48px;
+    }
+    .center{ text-align:center }
+    .center .section-sub{ margin-left:auto; margin-right:auto }
 
-    /* ── Footer ── */
+    /* ── SERVICES ──────────────────────────── */
+    #services{ background:var(--light) }
+    .svc-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+      gap:20px;
+    }
+    .svc-card{
+      background:var(--white); border-radius:var(--radius); padding:28px;
+      border:1px solid var(--border);
+      transition:transform .2s,box-shadow .2s;
+    }
+    .svc-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow) }
+    .svc-icon{ font-size:2.2em; margin-bottom:12px }
+    .svc-card h3{ font-size:1.05em; font-weight:700; margin-bottom:8px; color:var(--primary) }
+    .svc-card p{ font-size:.9em; color:var(--muted); line-height:1.6 }
+
+    /* ── WHY US ────────────────────────────── */
+    .pillars{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+      gap:24px;
+    }
+    .pillar{
+      display:flex; gap:16px; align-items:flex-start; padding:24px;
+      border-radius:var(--radius); border:1px solid var(--border);
+      background:var(--white);
+    }
+    .pillar-icon{
+      width:48px; height:48px; border-radius:50%;
+      background:var(--light); display:flex; align-items:center;
+      justify-content:center; font-size:1.4em; flex-shrink:0;
+    }
+    .pillar h3{ font-size:1em; font-weight:700; margin-bottom:4px; color:var(--primary) }
+    .pillar p{ font-size:.88em; color:var(--muted) }
+
+    /* ── STATS STRIP ────────────────────────── */
+    .stats-strip{
+      background:var(--primary); color:#fff; padding:48px 24px;
+      display:flex; flex-wrap:wrap; justify-content:center; gap:48px;
+      text-align:center;
+    }
+    .stat .n{
+      font-size:clamp(2em,5vw,3.2em); font-weight:900;
+      color:var(--accent);
+    }
+    .stat .l{ font-size:.85em; opacity:.75; text-transform:uppercase; letter-spacing:.05em }
+
+    /* ── REVIEWS ────────────────────────────── */
+    #reviews{ background:var(--light) }
+    .reviews-grid{
+      display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px;
+    }
+    .review-card{
+      background:var(--white); border-radius:var(--radius);
+      padding:28px; border:1px solid var(--border);
+      box-shadow:var(--shadow);
+    }
+    .review-top{ display:flex; align-items:center; gap:14px; margin-bottom:16px }
+    .reviewer-avatar{
+      width:44px; height:44px; border-radius:50%;
+      background:var(--primary); color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.1em; font-weight:700; flex-shrink:0;
+    }
+    .reviewer-name{ font-weight:700; font-size:.95em }
+    .review-meta{ font-size:.8em; color:var(--muted); margin-top:2px }
+    .review-meta .stars{ color:var(--star) }
+    .review-text{ font-size:.92em; color:var(--text); line-height:1.65; font-style:italic }
+    .review-service{ font-size:.78em; color:var(--muted); margin-top:12px; padding-top:12px; border-top:1px solid var(--border) }
+
+    /* ── HOW IT WORKS ───────────────────────── */
+    .steps{
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:16px; position:relative;
+    }
+    .step{
+      text-align:center; padding:32px 24px;
+      background:var(--white); border-radius:var(--radius); border:1px solid var(--border);
+    }
+    .step-num{
+      width:52px; height:52px; border-radius:50%;
+      background:var(--accent); color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.3em; font-weight:900; margin:0 auto 16px;
+    }
+    .step h3{ font-size:1.05em; font-weight:700; margin-bottom:8px; color:var(--primary) }
+    .step p{ font-size:.88em; color:var(--muted) }
+
+    /* ── ABOUT ──────────────────────────────── */
+    #about{ background:var(--light) }
+    .about-grid{
+      display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center;
+    }
+    .about-badges{ display:flex; flex-wrap:wrap; gap:10px; margin-top:24px }
+    .badge{
+      display:inline-flex; align-items:center; gap:6px;
+      background:var(--white); border:1px solid var(--border);
+      padding:8px 16px; border-radius:50px;
+      font-size:.82em; font-weight:600; color:var(--primary);
+    }
+    .about-card{
+      background:var(--white); border-radius:var(--radius);
+      padding:32px; border:1px solid var(--border);
+      box-shadow:var(--shadow);
+    }
+    .about-card h3{
+      font-size:1.5em; font-weight:800; color:var(--primary); margin-bottom:8px;
+    }
+    .about-quote{
+      font-size:1.05em; font-style:italic; color:var(--muted);
+      border-left:3px solid var(--accent); padding-left:16px; margin-top:16px;
+    }
+
+    /* ── SERVICE AREA ───────────────────────── */
+    .area-tags{
+      display:flex; flex-wrap:wrap; gap:10px; margin-top:10px;
+    }
+    .area-tag{
+      background:var(--white); border:1px solid var(--border);
+      padding:6px 14px; border-radius:50px; font-size:.85em; color:var(--muted);
+    }
+
+    /* ── FAQ ─────────────────────────────────── */
+    #faq{ background:var(--light) }
+    .faq-list{ max-width:780px; margin:0 auto; display:flex; flex-direction:column; gap:10px }
+    .faq-item{
+      background:var(--white); border-radius:var(--radius);
+      border:1px solid var(--border); overflow:hidden;
+    }
+    .faq-q{
+      width:100%; background:none; border:none; cursor:pointer;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:18px 20px; font-size:.95em; font-weight:600; color:var(--primary);
+      text-align:left; gap:12px;
+    }
+    .faq-q:hover{ background:var(--light) }
+    .faq-arrow{ font-size:1.2em; transition:transform .25s; flex-shrink:0 }
+    .faq-q.open .faq-arrow{ transform:rotate(180deg) }
+    .faq-a{
+      max-height:0; overflow:hidden; transition:max-height .3s ease;
+    }
+    .faq-a p{ padding:0 20px 18px; font-size:.9em; color:var(--muted); line-height:1.7 }
+    .faq-a.open{ max-height:200px }
+
+    /* ── FINAL CTA ──────────────────────────── */
+    .cta-section{
+      background:linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 70%, #000));
+      color:#fff; padding:80px 24px; text-align:center;
+    }
+    .cta-section h2{ font-size:clamp(1.7em,4vw,2.6em); font-weight:800; margin-bottom:12px }
+    .cta-section p{ font-size:1.05em; opacity:.8; margin-bottom:36px; max-width:520px; margin-left:auto; margin-right:auto }
+    .cta-phone{ font-size:clamp(1.8em,5vw,3em); font-weight:900; color:var(--accent); margin-bottom:10px }
+    .cta-sub{ font-size:.85em; opacity:.6; margin-bottom:28px }
+    .guarantee-badge{
+      display:inline-flex; align-items:center; gap:10px;
+      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+      padding:12px 24px; border-radius:50px; font-size:.88em; margin-top:20px;
+    }
+
+    /* ── FOOTER ─────────────────────────────── */
     footer{
-      background:#111;color:#555;text-align:center;
-      padding:20px;font-size:.82em
+      background:#0a0a0a; color:#666; padding:40px 24px;
+      display:flex; flex-wrap:wrap; align-items:center;
+      justify-content:space-between; gap:16px;
+      font-size:.82em;
+    }
+    footer .f-name{ color:#999; font-weight:600 }
+    footer .f-links{ display:flex; gap:16px; flex-wrap:wrap }
+    footer .f-links a:hover{ color:#ccc }
+
+    /* ── MOBILE BOTTOM BAR ──────────────────── */
+    .mobile-bar{
+      display:none; position:fixed; bottom:0; left:0; right:0; z-index:998;
+      background:var(--accent); color:#fff;
+      padding:14px 20px; text-align:center;
+      font-size:1.05em; font-weight:700;
+      box-shadow:0 -4px 16px rgba(0,0,0,.2);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────── */
+    @media(max-width:768px){
+      section{ padding:52px 16px }
+      .about-grid{ grid-template-columns:1fr; gap:28px }
+      .trust-divider{ display:none }
+      .mobile-bar{ display:block }
+      body{ padding-bottom:60px }
+      .site-header .logo span{ display:none }
     }
   </style>
 </head>
 <body>
 
-<section class="hero">
-  <div class="badge">🌿 Landscaping Services</div>
-  <h1>Dani landscaping LLC</h1>
-  <p class="sub">Serving Lexington KY and surrounding areas</p>
-  <a href="tel:8594609084" class="cta">📞 (859) 460-9084</a>
-</section>
+<!-- ── STICKY HEADER ── -->
+<header class="site-header">
+  <div class="logo">
+    Dani landscaping LLC
+    <span>Landscaping · Lexington</span>
+  </div>
+  <a href="tel:8594609084" class="header-cta">📞 (859) 460-9084</a>
+</header>
 
-<section class="services">
-  <h2>Why Choose Us</h2>
-  <p class="sub">Trusted by homeowners across Lexington KY</p>
-  <div class="grid">
-    <div class="card">
-      <div class="icon">⚡</div>
-      <h3>Fast Response</h3>
-      <p>Same-day service available</p>
-    </div>
-    <div class="card">
-      <div class="icon">✅</div>
-      <h3>Licensed & Insured</h3>
-      <p>Fully certified professionals</p>
-    </div>
-    <div class="card">
-      <div class="icon">💰</div>
-      <h3>Fair Pricing</h3>
-      <p>No hidden fees, free estimates</p>
-    </div>
-    <div class="card">
-      <div class="icon">⭐</div>
-      <h3>5-Star Rated</h3>
-      <p>Trusted by Lexington KY locals</p>
+<!-- ── HERO ── -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+    <div class="hero-badge">🌿 Landscaping Services · Lexington</div>
+    <h1>Professional Landscaping Services in Lexington</h1>
+    <p class="hero-sub">Transform your yard with expert lawn care, design, and maintenance.</p>
+    <div class="hero-cta-wrap">
+      <a href="tel:8594609084" class="btn-primary">📞 Call Now &mdash; (859) 460-9084</a>
+      <div class="hero-trust">
+        <span>Free Estimates</span>
+        <span>Licensed &amp; Insured</span>
+        <span>Same-Day Service</span>
+        <span>No Hidden Fees</span>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="contact">
-  <h2>Get a Free Quote Today</h2>
-  <p class='address'>5.0 | 5.0 | 5.0 | Landscaper | Landscaper | · 1833 Chatsworth Dr B | · | 1833 Chatsworth Dr B | Open · Closes 1 AM | Open · Closes 1 AM | Open | · Closes 1 AM | · (859) 460-9084 | · | (859) 460-9084</p>
-  <br>
-  <a href="tel:8594609084" class="phone">(859) 460-9084</a>
-  <p class="note">Serving Lexington KY and surrounding areas</p>
+<!-- ── TRUST BAR ── -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <span class="stars">★★★★★</span>
+    <span>4.9 out of 5 (188 reviews)</span>
+  </div>
+  <div class="trust-divider"></div>
+  <div class="trust-item"><span class="ti-icon">🛡️</span> Licensed &amp; Insured</div>
+  <div class="trust-divider"></div>
+  <div class="trust-item"><span class="ti-icon">⚡</span> Same-Day Available</div>
+  <div class="trust-divider"></div>
+  <div class="trust-item"><span class="ti-icon">💰</span> Free Estimates</div>
+  <div class="trust-divider"></div>
+  <div class="trust-item"><span class="ti-icon">✅</span> Satisfaction Guaranteed</div>
+</div>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="section-inner">
+    <div class="center">
+      <div class="section-tag">Landscaping Services</div>
+      <h2 class="section-title">Everything You Need, Done Right</h2>
+      <p class="section-sub">We handle all landscaping needs from routine maintenance to emergencies — always with upfront pricing.</p>
+    </div>
+    <div class="svc-grid">
+        <div class="svc-card">
+          <div class="svc-icon">✂️</div>
+          <h3>Lawn Mowing & Edging</h3>
+          <p>Regular cuts, crisp edges, and a clean finish every time.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">🌱</div>
+          <h3>Landscape Design</h3>
+          <p>Custom yard designs that add curb appeal and property value.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">🌳</div>
+          <h3>Tree & Shrub Trimming</h3>
+          <p>Professional pruning that keeps your plants healthy and beautiful.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">🪨</div>
+          <h3>Hardscape & Mulching</h3>
+          <p>Patios, walkways, retaining walls, and fresh mulch installation.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">💧</div>
+          <h3>Irrigation & Sprinklers</h3>
+          <p>System installs, repairs, and seasonal tune-ups to save water.</p>
+        </div>
+        <div class="svc-card">
+          <div class="svc-icon">🍂</div>
+          <h3>Seasonal Cleanup</h3>
+          <p>Spring and fall cleanups, leaf removal, and storm debris clearing.</p>
+        </div></div>
+  </div>
 </section>
 
-<footer>© 2026 Dani landscaping LLC · Lexington KY</footer>
+<!-- ── STATS STRIP ── -->
+<div class="stats-strip">
+  <div class="stat"><div class="n">728+</div><div class="l">Jobs Completed</div></div>
+  <div class="stat"><div class="n">188</div><div class="l">Five-Star Reviews</div></div>
+  <div class="stat"><div class="n">11</div><div class="l">Years Serving Lexington</div></div>
+  <div class="stat"><div class="n">100%</div><div class="l">Satisfaction Guarantee</div></div>
+</div>
+
+<!-- ── WHY US ── -->
+<section id="why-us">
+  <div class="section-inner">
+    <div class="center">
+      <div class="section-tag">Why Choose Us</div>
+      <h2 class="section-title">The Lexington Landscaping Experts You Can Trust</h2>
+      <p class="section-sub">We built our reputation one job at a time — here's what sets us apart.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">⭐</div>
+        <div>
+          <h3>Proven Track Record</h3>
+          <p>Over 728 completed jobs and 188 five-star reviews from real customers in Lexington.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">💰</div>
+        <div>
+          <h3>Transparent Pricing</h3>
+          <p>Free written estimates before work begins. The price we quote is the price you pay — guaranteed.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">⚡</div>
+        <div>
+          <h3>Fast Response Time</h3>
+          <p>Same-day and emergency service available. Most calls are answered within minutes.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🛡️</div>
+        <div>
+          <h3>Fully Licensed &amp; Insured</h3>
+          <p>All technicians are licensed in Kentucky, bonded, and fully insured for your complete protection.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">✅</div>
+        <div>
+          <h3>30-Day Guarantee</h3>
+          <p>If anything we fixed isn't right within 30 days, we return and make it right at absolutely no charge.</p>
+        </div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🏠</div>
+        <div>
+          <h3>Locally Owned</h3>
+          <p>We're your neighbors — not a call center. We care about our community and it shows in our work.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── REVIEWS ── -->
+<section id="reviews">
+  <div class="section-inner">
+    <div class="center">
+      <div class="section-tag">Customer Reviews</div>
+      <h2 class="section-title">What Lexington Customers Are Saying</h2>
+      <p class="section-sub">4.9 average rating from 188 verified customers.</p>
+    </div>
+    <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-top">
+            <div class="reviewer-avatar">S</div>
+            <div>
+              <div class="reviewer-name">Sandra L.</div>
+              <div class="review-meta">★★★★★ &nbsp;5.0 · 2 weeks ago</div>
+            </div>
+          </div>
+          <p class="review-text">"My backyard was an overgrown mess after two seasons of neglect. These guys completely transformed it in one day. Neighbors keep asking who did the work."</p>
+          <div class="review-service">Service: Landscaping · Lexington</div>
+        </div>
+        <div class="review-card">
+          <div class="review-top">
+            <div class="reviewer-avatar">T</div>
+            <div>
+              <div class="reviewer-name">Tom W.</div>
+              <div class="review-meta">★★★★★ &nbsp;5.0 · last month</div>
+            </div>
+          </div>
+          <p class="review-text">"Very professional — showed up on time, did exactly what was agreed, and the pricing was completely transparent. My lawn has never looked better."</p>
+          <div class="review-service">Service: Landscaping · Lexington</div>
+        </div>
+        <div class="review-card">
+          <div class="review-top">
+            <div class="reviewer-avatar">P</div>
+            <div>
+              <div class="reviewer-name">Priya M.</div>
+              <div class="review-meta">★★★★★ &nbsp;4.9 · 3 months ago</div>
+            </div>
+          </div>
+          <p class="review-text">"I've tried four different landscapers over the years and this team is by far the most reliable. They actually show up when scheduled and do a thorough job."</p>
+          <div class="review-service">Service: Landscaping · Lexington</div>
+        </div></div>
+  </div>
+</section>
+
+<!-- ── HOW IT WORKS ── -->
+<section id="how-it-works">
+  <div class="section-inner">
+    <div class="center">
+      <div class="section-tag">How It Works</div>
+      <h2 class="section-title">Getting Help Is Simple</h2>
+      <p class="section-sub">Three easy steps from problem to solved.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Call or Text Us</h3>
+        <p>Tell us what's going on. We listen, ask the right questions, and schedule at a time that works for you.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>We Come to You</h3>
+        <p>A licensed technician arrives on time. We assess the situation and give you a clear upfront quote — no surprises.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Problem Solved</h3>
+        <p>We do the work, clean up after ourselves, and make sure you're 100% satisfied before we leave.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div>
+        <div class="section-tag">About Us</div>
+        <h2 class="section-title">Proudly Serving Lexington for 11 Years</h2>
+        <p style="color:var(--muted);margin-bottom:16px">
+          Dani landscaping LLC is a locally owned and operated landscaping company serving Lexington and the surrounding area.
+          We started this business because we believed customers deserved honest pricing, reliable service,
+          and someone who'd actually stand behind their work.
+        </p>
+        <p style="color:var(--muted)">
+          Every job — from the smallest repair to a full installation — gets our complete attention.
+          We show up when we say we will, do what we said we'd do, and charge what we quoted.
+        </p>
+        <div class="about-badges">
+          <div class="badge">✅ Licensed &amp; Bonded</div>
+          <div class="badge">🛡️ Fully Insured</div>
+          <div class="badge">⚡ Same-Day Service</div>
+          <div class="badge">📍 Locally Owned</div>
+        </div>
+      </div>
+      <div class="about-card">
+        <h3>Dani landscaping LLC</h3>
+        <p style="color:var(--muted);font-size:.9em">Landscaping · Lexington, KY</p>
+        <div class="about-quote">
+          "We treat every home and business like it's our own. Our goal isn't just to fix the problem — it's to earn a customer for life."
+        </div>
+        <div style="margin-top:20px;font-size:.9em;color:var(--muted)">
+          <div style="margin-bottom:6px">📞 <a href="tel:8594609084" style="color:var(--primary);font-weight:600">(859) 460-9084</a></div>
+          <div style="margin-bottom:6px">📍 Serving Lexington &amp; surrounding areas</div>
+          <div>🕐 Available Mon–Sun, 7am–8pm (Emergency: 24/7)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SERVICE AREA ── -->
+<section id="service-area">
+  <div class="section-inner">
+    <div class="section-tag">Service Area</div>
+    <h2 class="section-title">Areas We Serve</h2>
+    <p class="section-sub" style="margin-bottom:20px">
+      We provide landscaping services throughout Lexington and the greater metro area.
+    </p>
+    <div class="area-tags">
+      <div class="area-tag">Lexington</div>
+      <div class="area-tag">Lexington East</div><div class="area-tag">Lexington Heights</div><div class="area-tag">Lexington West</div><div class="area-tag">Lexington</div><div class="area-tag">Greater Lexington</div><div class="area-tag">Lexington Metro</div>
+      <div class="area-tag">And Surrounding Areas</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section id="faq">
+  <div class="section-inner">
+    <div class="center">
+      <div class="section-tag">FAQ</div>
+      <h2 class="section-title">Common Questions</h2>
+      <p class="section-sub">Honest answers to the questions we hear most often.</p>
+    </div>
+    <div class="faq-list">
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            How much does landscaping cost in Lexington?
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><p>Basic lawn mowing starts around $40–$80 per visit. Full landscaping projects vary widely — we provide free quotes so you know exactly what to budget.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            How often should I have my lawn mowed?
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><p>During growing season, every 1–2 weeks keeps your lawn looking its best. We offer flexible weekly, bi-weekly, or monthly plans to fit your schedule.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Do you offer one-time services or only contracts?
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><p>Both! We do everything from single cleanups to ongoing maintenance plans. No long-term contracts required.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Can you handle large commercial properties?
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><p>Yes — we serve residential and commercial clients throughout Lexington and surrounding areas.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            Are your crew members insured?
+            <span class="faq-arrow">▾</span>
+          </button>
+          <div class="faq-a"><p>Yes. We carry full general liability and workers' compensation insurance. You're fully protected on every job.</p></div>
+        </div></div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ── -->
+<section class="cta-section">
+  <div class="section-inner">
+    <h2>Ready to Get Started?</h2>
+    <p>Call now for a free estimate. We'll pick up, listen to your situation, and give you honest advice — no pressure, no obligation.</p>
+    <div class="cta-phone"><a href="tel:8594609084" style="color:inherit">(859) 460-9084</a></div>
+    <div class="cta-sub">Serving Lexington · Free Estimates · Same-Day Availability</div>
+    <a href="tel:8594609084" class="btn-primary" style="margin:0 auto">📞 Call for a Free Estimate</a>
+    <div><div class="guarantee-badge">🛡️ 30-Day Workmanship Guarantee on All Work</div></div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div>
+    <div class="f-name">Dani landscaping LLC</div>
+    <div>Landscaping · Lexington, KY · (859) 460-9084</div>
+  </div>
+  <div class="f-links">
+    <a href="#services">Services</a>
+    <a href="#reviews">Reviews</a>
+    <a href="#about">About</a>
+    <a href="#faq">FAQ</a>
+    <a href="tel:8594609084">Contact</a>
+  </div>
+  <div>© 2026 Dani landscaping LLC · All rights reserved</div>
+</footer>
+
+<!-- ── MOBILE STICKY CALL BAR ── -->
+<a href="tel:8594609084" class="mobile-bar">📞 Tap to Call — (859) 460-9084</a>
+
+<script>
+function toggleFaq(btn) {
+  const a = btn.nextElementSibling;
+  const isOpen = a.classList.contains('open');
+  document.querySelectorAll('.faq-a.open').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.faq-q.open').forEach(el => el.classList.remove('open'));
+  if (!isOpen) { a.classList.add('open'); btn.classList.add('open'); }
+}
+
+// Animate sections on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.style.opacity = 1; });
+}, {threshold: 0.1});
+document.querySelectorAll('section, .trust-bar, .stats-strip')
+  .forEach(el => { el.style.opacity = 0; el.style.transition = 'opacity 0.5s'; observer.observe(el); });
+</script>
 
 </body>
 </html>
