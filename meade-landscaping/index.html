@@ -5,6 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meade Landscaping | Landscaping in Fort Collins</title>
   <meta name="description" content="Professional landscaping services in Fort Collins. Transform your yard with expert lawn care, design, and maintenance. Call (301) 807-0724 for a free estimate.">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2722%27%20fill%3D%27%231a3d1a%27%2F%3E%3Crect%20x%3D%274%27%20y%3D%274%27%20width%3D%2792%27%20height%3D%2792%27%20rx%3D%2718%27%20fill%3D%27%234caf50%27%20opacity%3D%270.25%27%2F%3E%3Cpath%20d%3D%27M50%2014%20C72%2014%2086%2032%2086%2052%20C86%2070%2072%2086%2052%2088%20C52%2088%2014%2072%2014%2050%20C14%2030%2028%2014%2050%2014%20Z%27%20fill%3D%27white%27%20opacity%3D%270.95%27%2F%3E%3Cpath%20d%3D%27M50%2088%20C50%2070%2047%2052%2042%2038%27%20stroke%3D%27%234caf50%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%20fill%3D%27none%27%2F%3E%3C%2Fsvg%3E">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20100%20100%27%3E%3Crect%20width%3D%27100%27%20height%3D%27100%27%20rx%3D%2722%27%20fill%3D%27%231a3d1a%27%2F%3E%3Crect%20x%3D%274%27%20y%3D%274%27%20width%3D%2792%27%20height%3D%2792%27%20rx%3D%2718%27%20fill%3D%27%234caf50%27%20opacity%3D%270.25%27%2F%3E%3Cpath%20d%3D%27M50%2014%20C72%2014%2086%2032%2086%2052%20C86%2070%2072%2086%2052%2088%20C52%2088%2014%2072%2014%2050%20C14%2030%2028%2014%2050%2014%20Z%27%20fill%3D%27white%27%20opacity%3D%270.95%27%2F%3E%3Cpath%20d%3D%27M50%2088%20C50%2070%2047%2052%2042%2038%27%20stroke%3D%27%234caf50%27%20stroke-width%3D%274%27%20stroke-linecap%3D%27round%27%20fill%3D%27none%27%2F%3E%3C%2Fsvg%3E">
+  <meta name="theme-color" content="#1a3d1a">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <!-- Open Graph -->
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="Meade Landscaping | Landscaping in Fort Collins">
+  <meta property="og:description" content="Professional landscaping services in Fort Collins. Transform your yard with expert lawn care, design, and maintenance. Call (301) 807-0724 for a free estimate.">
+  <meta property="og:locale"      content="en_US">
+  <meta property="og:site_name"   content="Meade Landscaping">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"        content="summary">
+  <meta name="twitter:title"       content="Meade Landscaping | Landscaping in Fort Collins">
+  <meta name="twitter:description" content="Professional landscaping services in Fort Collins. Transform your yard with expert lawn care, design, and maintenance.">
+
+  <!-- Local Business Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Meade Landscaping",
+    "telephone": "(301) 807-0724",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Fort Collins",
+      "addressRegion": "CO",
+      "addressCountry": "US"
+    },
+    "areaServed": "Fort Collins",
+    "description": "Professional landscaping services in Fort Collins.",
+    "priceRange": "$$",
+    "openingHours": "Mo-Su 07:00-20:00"
+  }
+  </script>
   <style>
     :root {
       --primary: #1a3d1a;
@@ -34,8 +74,16 @@
     }
     .logo{
       color:#fff; font-weight:800; font-size:1.1em; line-height:1.2;
-      max-width:60%;
+      max-width:60%; display:flex; align-items:center; gap:10px;
     }
+    .logo-mark{
+      flex-shrink:0; width:38px; height:38px; border-radius:10px;
+      background:var(--accent); display:flex; align-items:center;
+      justify-content:center; padding:7px;
+      box-shadow:0 2px 8px rgba(0,0,0,.28);
+    }
+    .logo-mark svg{ display:block; width:100%; height:100%; }
+    .logo-text{ display:flex; flex-direction:column }
     .logo span{ display:block; font-size:.7em; font-weight:400; opacity:.75 }
     .header-cta{
       background:var(--accent); color:#fff;
@@ -48,7 +96,8 @@
 
     /* ── HERO ──────────────────────────────── */
     .hero{
-      background: linear-gradient(160deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 60%, #000) 100%);
+      background: linear-gradient(160deg, rgba(0,0,0,.58) 0%, rgba(0,0,0,.75) 100%),
+                  url("https://loremflickr.com/1920/1080/landscaping,lawn?lock=201") center/cover no-repeat;
       color:#fff; padding:80px 24px 90px; text-align:center;
       position:relative; overflow:hidden;
     }
@@ -248,6 +297,31 @@
       padding:6px 14px; border-radius:50px; font-size:.85em; color:var(--muted);
     }
 
+    /* ── GALLERY ────────────────────────────── */
+    .gallery-grid{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+    }
+    .gallery-item{
+      position:relative; border-radius:var(--radius); overflow:hidden;
+      aspect-ratio:4/3; background:#eee;
+    }
+    .gallery-item img{
+      width:100%; height:100%; object-fit:cover;
+      transition:transform .4s ease;
+    }
+    .gallery-item:hover img{ transform:scale(1.05) }
+    .gallery-caption{
+      position:absolute; bottom:0; left:0; right:0;
+      background:linear-gradient(transparent, rgba(0,0,0,.65));
+      color:#fff; padding:28px 14px 12px;
+      font-size:.82em; font-weight:600;
+    }
+    @media(max-width:640px){
+      .gallery-grid{ grid-template-columns:1fr 1fr; gap:10px }
+    }
+
     /* ── FAQ ─────────────────────────────────── */
     #faq{ background:var(--light) }
     .faq-list{ max-width:780px; margin:0 auto; display:flex; flex-direction:column; gap:10px }
@@ -313,6 +387,7 @@
       .mobile-bar{ display:block }
       body{ padding-bottom:60px }
       .site-header .logo span{ display:none }
+      .logo-mark{ width:30px; height:30px; border-radius:8px; font-size:.75em }
     }
   </style>
 </head>
@@ -321,8 +396,11 @@
 <!-- ── STICKY HEADER ── -->
 <header class="site-header">
   <div class="logo">
-    Meade Landscaping
-    <span>Landscaping · Fort Collins</span>
+    <span class='logo-mark' aria-hidden='true'><svg viewBox='0 0 100 100' width='20' height='20' aria-hidden='true'><path d='M50 14 C72 14 86 32 86 52 C86 70 72 86 52 88 C52 88 14 72 14 50 C14 30 28 14 50 14 Z' fill='white' opacity='0.95'/><path d='M50 88 C50 70 47 52 42 38' stroke='#4caf50' stroke-width='4' stroke-linecap='round' fill='none'/></svg></span>
+    <div class="logo-text">
+      Meade Landscaping
+      <span>Landscaping · Fort Collins</span>
+    </div>
   </div>
   <a href="tel:3018070724" class="header-cta">📞 (301) 807-0724</a>
 </header>
@@ -463,6 +541,30 @@
         </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <div class="section-inner">
+    <div class="center">
+      <div class="section-tag">Our Work</div>
+      <h2 class="section-title">See the Quality for Yourself</h2>
+      <p class="section-sub">Real work, real results — from jobs we've completed right here in Fort Collins.</p>
+    </div>
+    <div class="gallery-grid">
+      <div class="gallery-item">
+        <img src="https://loremflickr.com/800/600/lawn,mowing?lock=202" alt="Lawn mowing and edging" loading="lazy">
+        <div class="gallery-caption">Lawn mowing and edging</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://loremflickr.com/800/600/landscaping,garden?lock=203" alt="Landscape design and maintenance" loading="lazy">
+        <div class="gallery-caption">Landscape design and maintenance</div>
+      </div>
+      <div class="gallery-item">
+        <img src="https://loremflickr.com/800/600/autumn,leaves,yard?lock=204" alt="Seasonal cleanup and care" loading="lazy">
+        <div class="gallery-caption">Seasonal cleanup and care</div>
+      </div></div>
   </div>
 </section>
 
