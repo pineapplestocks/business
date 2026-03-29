@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Sites Directory</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Segoe UI,Arial,sans-serif;background:#f5f7fb;color:#122033}
+    .shell{max-width:1280px;margin:0 auto;padding:0 20px}
+    .hero{
+      padding:64px 0 36px;
+      background:radial-gradient(circle at top left, #ecf3ff, transparent 45%),
+                 linear-gradient(135deg, #11243d, #1f385c);
+      color:#fff
+    }
+    h1{font-size:clamp(32px,5vw,54px);margin-bottom:12px}
+    .hero p{max-width:64ch;color:rgba(255,255,255,0.84)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px}
+    .stat{
+      background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.1);
+      border-radius:18px;padding:22px
+    }
+    .stat strong{display:block;font-size:30px}
+    .grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+      gap:18px;padding:32px 0 60px
+    }
+    .card{
+      background:#fff;border-radius:18px;padding:22px;border:1px solid #e7ecf4;
+      box-shadow:0 16px 40px rgba(17,36,61,0.08)
+    }
+    .badge{
+      display:inline-block;padding:6px 10px;border-radius:999px;
+      background:#ecf3ff;color:#244a78;font-size:12px;font-weight:700;margin-bottom:12px
+    }
+    .card h2{font-size:20px;line-height:1.2;margin-bottom:8px}
+    .meta{color:#586474;font-size:14px;margin-bottom:8px}
+    .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;
+      border-radius:999px;background:#17345b;color:#fff;font-weight:700
+    }
+    .btn.secondary{background:#eef4ff;color:#17345b}
+    footer{padding:24px 0 50px;color:#657286;text-align:center}
+    @media (max-width:900px){.stats{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div class="shell">
+      <h1>Business Sites Directory</h1>
+      <p>Generated lead websites for outbound sales. This page is rebuilt from the lead file so the CRM export and the site inventory stay in sync.</p>
+      <div class="stats">
+        <div class="stat"><strong>3</strong><span>Generated Sites</span></div>
+        <div class="stat"><strong>3</strong><span>Trade Buckets</span></div>
+        <div class="stat"><strong>3</strong><span>States Covered</span></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="shell">
+    <div class="grid"><article class="card"><div class="badge">Water Heater Repair</div><h2>Front Range Hot Water Pros</h2><div class="meta">Aurora, CO</div><div class="meta">(720) 555-0188</div><div class="meta">No website found · Status: open</div><div class="links"><a class="btn" href="https://pineapplestocks.github.io/business/front-range-hot-water-pros/">View Site</a><a class="btn secondary" href="https://www.google.com/maps/place/example-water-heater">Google Maps</a></div></article><article class="card"><div class="badge">Landscaper</div><h2>Badger Green Yards</h2><div class="meta">Madison, WI</div><div class="meta">(608) 555-0119</div><div class="meta">No website found · Status: open</div><div class="links"><a class="btn" href="https://pineapplestocks.github.io/business/badger-green-yards/">View Site</a><a class="btn secondary" href="https://www.google.com/maps/place/example-landscaper">Google Maps</a></div></article><article class="card"><div class="badge">Plumber</div><h2>Summit Pipe Rescue</h2><div class="meta">Salt Lake City, UT</div><div class="meta">(801) 555-0142</div><div class="meta">No website found · Status: open</div><div class="links"><a class="btn" href="https://pineapplestocks.github.io/business/summit-pipe-rescue/">View Site</a><a class="btn secondary" href="https://www.google.com/maps/place/example-plumber">Google Maps</a></div></article></div>
+  </main>
+
+  <footer>
+    <div>Directory rebuilt from structured leads for outbound calling and site previews.</div>
+  </footer>
+</body>
+</html>
