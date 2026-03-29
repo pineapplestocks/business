@@ -119,6 +119,10 @@ python3 scripts/serve_crm.py \
 
 Then open `http://127.0.0.1:8765`.
 
+The same CRM UI is also published on GitHub Pages at `https://pineapplestocks.github.io/business/crm/`.
+That public page loads the published lead snapshot from `data/crm_records.json` and saves your edits in browser storage on that device.
+Use the public page when you want a lightweight hosted CRM view, and use the local server when you want the shared file-backed store.
+
 ## Safe Defaults
 
 The generator writes to `generated/` by default so it does not overwrite the current published repo pages.
@@ -140,3 +144,4 @@ When you are ready to publish directly into the repo root, point the generator a
 - Google Maps alone is not trusted. The pipeline also checks search results before a lead is treated as pitchable.
 - The generator and CRM export default to `verified_no_website` leads only.
 - The simple CRM is file-backed, not a hosted SaaS. Your notes live in `data/crm_records.json`.
+- The public GitHub Pages CRM is static, so its changes are stored in the browser unless you run the local CRM server.

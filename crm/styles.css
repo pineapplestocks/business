@@ -75,6 +75,40 @@ button,input,select,textarea{font:inherit}
   display:flex;
   flex-wrap:wrap;
   gap:12px;
+  align-items:center;
+}
+
+.mode-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:11px 14px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.mode-api{
+  background:rgba(255,255,255,.18);
+  color:#fff;
+}
+
+.mode-static{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.18);
+}
+
+.mode-notice{
+  margin:18px 0 0;
+  padding:16px 18px;
+  border-radius:22px;
+  border:1px solid var(--border);
+  background:rgba(255,253,249,.9);
+  color:var(--ink);
+  box-shadow:var(--shadow);
 }
 
 .button{
@@ -292,6 +326,16 @@ textarea{
 
 .lead-item.active .pill{
   background:rgba(255,255,255,.14);
+  color:#fff;
+}
+
+.pill-local{
+  background:var(--accent-soft);
+  color:var(--accent);
+}
+
+.lead-item.active .pill-local{
+  background:rgba(255,231,217,.22);
   color:#fff;
 }
 

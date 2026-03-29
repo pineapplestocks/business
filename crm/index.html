@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Outbound CRM</title>
-  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
   <div class="app-shell">
@@ -15,10 +15,17 @@
         <p class="subtitle">Call the businesses, log what happened, and keep the real deals from slipping through the cracks.</p>
       </div>
       <div class="topbar-actions">
+        <span id="modeBadge" class="mode-badge hidden"></span>
         <button id="syncButton" class="button button-secondary" type="button">Sync Leads</button>
-        <a class="button button-secondary" href="/api/export.csv">Export CSV</a>
+        <button id="exportCsvButton" class="button button-secondary" type="button">Export CSV</button>
+        <button id="exportBackupButton" class="button button-secondary hidden" type="button">Export Backup</button>
+        <button id="importBackupButton" class="button button-secondary hidden" type="button">Import Backup</button>
+        <button id="resetBrowserButton" class="button button-secondary hidden" type="button">Reset Browser Changes</button>
+        <input id="importBackupInput" class="hidden" type="file" accept="application/json">
       </div>
     </header>
+
+    <section id="modeNotice" class="mode-notice hidden"></section>
 
     <section class="stats-row" id="statsRow"></section>
 
@@ -156,6 +163,6 @@
     </main>
   </div>
 
-  <script src="/app.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
