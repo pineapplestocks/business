@@ -139,8 +139,8 @@ def _build_description(lead: Lead) -> str:
 def _lead_to_zoho(lead: Lead) -> dict:
     name = (lead.business_name.strip() or lead.slug or "Local Business")
     return {
-        "Company": name,
-        "Last_Name": name,
+        "Company": name[:255],
+        "Last_Name": name[:80],
         "Phone": _normalize_phone(lead.phone),
         "Street": lead.address or "",
         "City": lead.city or "",
@@ -180,9 +180,10 @@ def _upsert_batch(batch: list[Lead], *, access_token: str, dry_run: bool) -> tup
         action = (item.get("details") or {}).get("Modified_Time") and item.get("code") == "SUCCESS"
         # Zoho upsert returns "RECORD_ADDED" or "RECORD_UPDATED" in message or code
         code = item.get("code", "")
+        action = str(item.get("action", "")).lower()
         msg = str(item.get("message", "")).lower()
         if code == "SUCCESS":
-            if "duplicate" in msg or "update" in msg:
+            if action == "update" or "duplicate" in msg or "update" in msg:
                 updated += 1
             else:
                 created += 1
