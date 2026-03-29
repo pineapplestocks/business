@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 import re
 from dataclasses import dataclass
 from urllib.parse import quote_plus
@@ -16,6 +17,7 @@ except ImportError:  # pragma: no cover - handled at runtime with a clearer mess
 
 
 DETAIL_LINK_SELECTOR = 'a[href*="/maps/place/"]'
+ProgressCallback = Callable[[str, dict[str, object]], None]
 
 
 @dataclass(slots=True)
@@ -24,6 +26,12 @@ class SearchQuery:
     trade: str = ""
     city: str = ""
     state: str = ""
+
+
+@dataclass(slots=True)
+class ScrapeQueryResult:
+    leads: list[Lead]
+    seen_existing_keys: set[str]
 
 
 class GoogleMapsScraper:
@@ -42,6 +50,23 @@ class GoogleMapsScraper:
         self._playwright = None
         self._browser: Browser | None = None
         self._context: BrowserContext | None = None
+
+    def _has_result_capacity(self, count: int) -> bool:
+        return self.max_results <= 0 or count < self.max_results
+
+    def _stall_limit_for_count(self, count: int) -> int:
+        if self.max_results > 0:
+            return self.scroll_rounds
+
+        # In exhaustive mode, stop much sooner once we already have a healthy
+        # result set and Google Maps has stopped yielding new cards.
+        if count >= 100:
+            return min(self.scroll_rounds, 15)
+        if count >= 50:
+            return min(self.scroll_rounds, 20)
+        if count >= 20:
+            return min(self.scroll_rounds, 30)
+        return self.scroll_rounds
 
     def __enter__(self) -> "GoogleMapsScraper":
         if sync_playwright is None:
@@ -79,36 +104,88 @@ class GoogleMapsScraper:
     def scrape(self, searches: list[SearchQuery]) -> list[Lead]:
         leads: list[Lead] = []
         for search in searches:
-            leads.extend(self.scrape_query(search))
+            leads.extend(self.scrape_query(search).leads)
         return dedupe_leads(leads)
 
-    def scrape_query(self, search: SearchQuery) -> list[Lead]:
+    def scrape_query(
+        self,
+        search: SearchQuery,
+        *,
+        existing_keys: set[str] | None = None,
+        progress_callback: ProgressCallback | None = None,
+    ) -> ScrapeQueryResult:
         search_page = self.context.new_page()
         detail_page = self.context.new_page()
         try:
-            urls = self._collect_result_urls(search_page, search.query)
-            leads = [self._extract_lead(detail_page, url, search) for url in urls]
-            return [lead for lead in leads if lead is not None]
+            urls, seen_existing_keys = self._collect_result_urls(
+                search_page,
+                search.query,
+                existing_keys=existing_keys,
+                progress_callback=progress_callback,
+            )
+            if progress_callback is not None:
+                progress_callback(
+                    "collect_complete",
+                    {
+                        "query": search.query,
+                        "url_count": len(urls),
+                        "seen_existing_count": len(seen_existing_keys),
+                    },
+                )
+
+            leads: list[Lead] = []
+            total_urls = len(urls)
+            for index, url in enumerate(urls, start=1):
+                lead = self._extract_lead(detail_page, url, search)
+                if lead is not None:
+                    leads.append(lead)
+                if progress_callback is not None:
+                    progress_callback(
+                        "extract_progress",
+                        {
+                            "query": search.query,
+                            "done": index,
+                            "total": total_urls,
+                            "business_name": lead.business_name if lead is not None else "",
+                        },
+                    )
+            return ScrapeQueryResult(
+                leads=leads,
+                seen_existing_keys=seen_existing_keys,
+            )
         finally:
             detail_page.close()
             search_page.close()
 
-    def _collect_result_urls(self, page: Page, query: str) -> list[str]:
+    def _collect_result_urls(
+        self,
+        page: Page,
+        query: str,
+        *,
+        existing_keys: set[str] | None = None,
+        progress_callback: ProgressCallback | None = None,
+    ) -> tuple[list[str], set[str]]:
         search_url = f"https://www.google.com/maps/search/{quote_plus(query)}"
         page.goto(search_url, wait_until="domcontentloaded", timeout=90_000)
         page.wait_for_timeout(3_000)
 
         urls: list[str] = []
         seen: set[str] = set()
+        existing_keys = existing_keys or set()
+        seen_existing_keys: set[str] = set()
         feed = page.locator('div[role="feed"]').first
         stall_rounds = 0
+        scroll_round = 0
 
         if "/maps/place/" in page.url:
             cleaned = self._clean_maps_url(page.url)
             if cleaned:
-                return [cleaned]
+                if cleaned in existing_keys:
+                    return [], {cleaned}
+                return [cleaned], set()
 
-        while len(urls) < self.max_results and stall_rounds < self.scroll_rounds:
+        while self._has_result_capacity(len(urls)) and stall_rounds < self._stall_limit_for_count(len(urls)):
+            scroll_round += 1
             current_links = []
             try:
                 current_links = page.locator(DETAIL_LINK_SELECTOR).evaluate_all(
@@ -123,11 +200,29 @@ class GoogleMapsScraper:
                 if not cleaned or cleaned in seen:
                     continue
                 seen.add(cleaned)
+                if cleaned in existing_keys:
+                    seen_existing_keys.add(cleaned)
+                    continue
                 urls.append(cleaned)
-                if len(urls) >= self.max_results:
+                if not self._has_result_capacity(len(urls)):
                     break
 
-            if len(urls) >= self.max_results:
+            new_urls = len(urls) - before
+            effective_stall_limit = self._stall_limit_for_count(len(urls))
+            if not self._has_result_capacity(len(urls)):
+                if progress_callback is not None:
+                    progress_callback(
+                        "collect_progress",
+                        {
+                            "query": query,
+                            "round": scroll_round,
+                            "new_urls": new_urls,
+                            "url_count": len(urls),
+                            "stall_rounds": stall_rounds,
+                            "stall_limit": effective_stall_limit,
+                            "seen_existing_count": len(seen_existing_keys),
+                        },
+                    )
                 break
 
             if feed.count():
@@ -140,8 +235,24 @@ class GoogleMapsScraper:
 
             page.wait_for_timeout(self.wait_ms)
             stall_rounds = stall_rounds + 1 if len(urls) == before else 0
+            effective_stall_limit = self._stall_limit_for_count(len(urls))
+            if progress_callback is not None:
+                progress_callback(
+                    "collect_progress",
+                    {
+                        "query": query,
+                        "round": scroll_round,
+                        "new_urls": new_urls,
+                        "url_count": len(urls),
+                        "stall_rounds": stall_rounds,
+                        "stall_limit": effective_stall_limit,
+                        "seen_existing_count": len(seen_existing_keys),
+                    },
+                )
 
-        return urls[: self.max_results]
+        if self.max_results <= 0:
+            return urls, seen_existing_keys
+        return urls[: self.max_results], seen_existing_keys
 
     def _extract_lead(self, page: Page, detail_url: str, search: SearchQuery) -> Lead | None:
         page.goto(detail_url, wait_until="domcontentloaded", timeout=90_000)

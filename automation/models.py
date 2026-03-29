@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import csv
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Iterable
 
@@ -40,6 +41,9 @@ CSV_FIELDS = [
     "website_verification_status",
     "website_verification_notes",
     "business_status",
+    "first_seen_on",
+    "last_seen_on",
+    "times_seen",
     "generated_site_url",
     "generated_site_path",
     "pitch_status",
@@ -74,6 +78,9 @@ class Lead:
     website_verification_status: str = "not_checked"
     website_verification_notes: str = ""
     business_status: str = "unknown"
+    first_seen_on: str = ""
+    last_seen_on: str = ""
+    times_seen: int = 1
     generated_site_url: str = ""
     generated_site_path: str = ""
     pitch_status: str = "new"
@@ -85,6 +92,7 @@ class Lead:
         self.trade = infer_trade(self.trade, self.category, self.source_query)
         self.business_status = normalize_business_status(self.business_status)
         self.website_verification_status = normalize_website_verification_status(self.website_verification_status)
+        self.times_seen = max(1, int(self.times_seen or 1))
         self.refresh_website_fields()
 
     def refresh_website_fields(self) -> None:
@@ -115,6 +123,24 @@ class Lead:
 
     def is_verified_no_website(self) -> bool:
         return self.website_verification_status == "verified_no_website" and not self.has_website
+
+    def dedupe_key(self) -> str:
+        return self.google_maps_url or f"{self.business_name.lower()}::{self.phone}"
+
+    def mark_seen(self, seen_on: str | None = None) -> None:
+        seen_on = seen_on or date.today().isoformat()
+        if not self.first_seen_on:
+            self.first_seen_on = seen_on
+        self.last_seen_on = seen_on
+        self.times_seen = max(1, int(self.times_seen or 1)) + 1
+
+    def ensure_seen_defaults(self, seen_on: str | None = None) -> None:
+        seen_on = seen_on or date.today().isoformat()
+        if not self.first_seen_on:
+            self.first_seen_on = seen_on
+        if not self.last_seen_on:
+            self.last_seen_on = seen_on
+        self.times_seen = max(1, int(self.times_seen or 1))
 
     def qualifies_for_pitch(self, *, include_unknown_status: bool = False) -> bool:
         allowed_statuses = {"open"}
@@ -155,6 +181,9 @@ class Lead:
             website_verification_status=row.get("website_verification_status") or "not_checked",
             website_verification_notes=row.get("website_verification_notes") or "",
             business_status=row.get("business_status") or "unknown",
+            first_seen_on=row.get("first_seen_on") or "",
+            last_seen_on=row.get("last_seen_on") or "",
+            times_seen=int((row.get("times_seen") or "1").strip() or "1"),
             generated_site_url=row.get("generated_site_url") or "",
             generated_site_path=row.get("generated_site_path") or "",
             pitch_status=row.get("pitch_status") or "new",
@@ -188,6 +217,9 @@ class Lead:
             "website_verification_status": self.website_verification_status,
             "website_verification_notes": self.website_verification_notes,
             "business_status": self.business_status,
+            "first_seen_on": self.first_seen_on,
+            "last_seen_on": self.last_seen_on,
+            "times_seen": str(self.times_seen),
             "generated_site_url": self.generated_site_url,
             "generated_site_path": self.generated_site_path,
             "pitch_status": self.pitch_status,
@@ -215,7 +247,7 @@ def dedupe_leads(leads: Iterable[Lead]) -> list[Lead]:
     seen: set[str] = set()
     unique: list[Lead] = []
     for lead in leads:
-        dedupe_key = lead.google_maps_url or f"{lead.business_name.lower()}::{lead.phone}"
+        dedupe_key = lead.dedupe_key()
         if dedupe_key in seen:
             continue
         seen.add(dedupe_key)
