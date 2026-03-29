@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Badger Green Yards | Landscaper in Madison</title>
+  <meta name="description" content="Prebuilt outreach website for Badger Green Yards in Madison, WI. Use this demo page during manual sales calls for landscaper leads.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Badger Green Yards | Landscaper in Madison">
+  <meta property="og:description" content="Prebuilt outreach website for Badger Green Yards in Madison, WI. Use this demo page during manual sales calls for landscaper leads.">
+  <meta property="og:site_name" content="Badger Green Yards">
+  <meta name="theme-color" content="#1a3d1a">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "Badger Green Yards",
+    "telephone": "(608) 555-0119",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Madison",
+      "addressRegion": "WI",
+      "addressCountry": "US"
+    },
+    "areaServed": "Madison",
+    "url": "https://pineapplestocks.github.io/business/badger-green-yards/"
+  }
+  </script>
+  <style>
+    :root{
+      --primary: #1a3d1a;
+      --accent: #4caf50;
+      --light: #edf5ed;
+      --text: #17202a;
+      --muted: #4f5b67;
+      --white: #ffffff;
+      --border: #e5e7eb;
+      --radius: 16px;
+      --shadow: 0 16px 50px rgba(0,0,0,0.08);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:Segoe UI,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
+    a{text-decoration:none;color:inherit}
+    img{display:block;width:100%;height:auto}
+    header{
+      position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.96);
+      border-bottom:1px solid var(--border);backdrop-filter:blur(12px)
+    }
+    .nav{
+      max-width:1120px;margin:0 auto;padding:14px 20px;
+      display:flex;justify-content:space-between;align-items:center;gap:16px
+    }
+    .brand{font-weight:800;color:var(--primary)}
+    .brand span{display:block;font-size:12px;font-weight:500;color:var(--muted)}
+    .phone-btn,.cta-btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      padding:14px 24px;border-radius:999px;font-weight:700
+    }
+    .phone-btn{background:var(--primary);color:#fff}
+    .hero{
+      padding:88px 20px 64px;
+      background:
+        linear-gradient(135deg, rgba(0,0,0,.62), rgba(0,0,0,.35)),
+        url("https://loremflickr.com/1600/900/landscaping,lawn?lock=201") center/cover no-repeat;
+      color:#fff
+    }
+    .hero-inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:end}
+    .eyebrow{
+      display:inline-block;margin-bottom:18px;padding:6px 12px;border-radius:999px;
+      background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.18);font-size:13px
+    }
+    h1{font-size:clamp(34px,5vw,58px);line-height:1.05;margin-bottom:16px;max-width:12ch}
+    .hero p{max-width:60ch;font-size:18px;color:rgba(255,255,255,0.9)}
+    .hero-actions{margin-top:26px;display:flex;flex-wrap:wrap;gap:14px}
+    .cta-btn{background:var(--accent);color:#fff}
+    .hero-card{
+      background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);
+      border-radius:24px;padding:24px;box-shadow:var(--shadow)
+    }
+    .hero-card h2{font-size:20px;margin-bottom:10px}
+    .hero-card ul{padding-left:18px}
+    .hero-card li+li{margin-top:8px}
+    .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+    .stats{
+      margin-top:-28px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px
+    }
+    .stat{
+      background:#fff;border:1px solid var(--border);border-radius:18px;
+      padding:22px;box-shadow:var(--shadow)
+    }
+    .stat strong{display:block;font-size:28px;color:var(--primary)}
+    section{padding:72px 0}
+    .section-head{margin-bottom:26px}
+    .tag{
+      display:inline-block;background:var(--light);color:var(--primary);
+      padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:12px
+    }
+    h2{font-size:clamp(28px,4vw,40px);line-height:1.1;margin-bottom:10px;color:var(--primary)}
+    .sub{max-width:62ch;color:var(--muted)}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{
+      background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow)
+    }
+    .card h3{margin-bottom:8px;color:var(--primary)}
+    .proof{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:18px
+    }
+    .proof figure{
+      overflow:hidden;border-radius:18px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)
+    }
+    .proof figcaption{padding:14px 16px;color:var(--muted);font-size:14px}
+    .split{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .list{display:grid;gap:14px}
+    .list-item{
+      padding:18px 18px 18px 20px;border-left:4px solid var(--accent);background:var(--light);border-radius:14px
+    }
+    .faq{display:grid;gap:14px}
+    .faq details{
+      background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)
+    }
+    .faq summary{cursor:pointer;font-weight:700;color:var(--primary)}
+    .faq p{margin-top:10px;color:var(--muted)}
+    .cta-panel{
+      background:linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 65%, black));
+      color:#fff;border-radius:28px;padding:32px;display:grid;gap:12px
+    }
+    .cta-panel .cta-btn,.cta-panel .phone-btn{width:max-content}
+    footer{padding:36px 20px 60px;color:var(--muted);text-align:center}
+    .mobile-bar{
+      position:fixed;left:16px;right:16px;bottom:16px;background:var(--accent);color:#fff;
+      border-radius:999px;padding:16px 18px;text-align:center;font-weight:700;box-shadow:var(--shadow)
+    }
+    @media (max-width: 900px){
+      .hero-inner,.split,.grid-3,.proof,.stats{grid-template-columns:1fr}
+      h1{max-width:none}
+      .nav{align-items:flex-start;flex-direction:column}
+      .mobile-bar{display:block}
+    }
+    @media (min-width: 901px){
+      .mobile-bar{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">Badger Green Yards<span>Landscaper in Madison, WI</span></div>
+      <a class="phone-btn" href="tel:6085550119">Call (608) 555-0119</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <div class="eyebrow">Ready-to-pitch demo site</div>
+        <h1>Clean, credible landscaping pages ready for Madison lead outreach</h1>
+        <p>A polished page focused on lawn care, landscape upkeep, design work, and dependable local service for homeowners.</p>
+        <div class="hero-actions">
+          <a class="cta-btn" href="tel:6085550119">Call (608) 555-0119</a>
+          <a class="phone-btn" href="#services">See what the page includes</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h2>Why this page works for outreach</h2>
+        <ul>
+          <li>Looks polished enough to send during a live call.</li><li>Uses structured business data from the lead record.</li><li>Can be refined quickly if the owner wants to move forward.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><strong>Phone-first</strong><span>Designed to turn a cold pitch into a credible local business presence.</span></div>
+      <div class="stat"><strong>Local trust</strong><span>Structured around Madison, WI service messaging and simple SEO metadata.</span></div>
+      <div class="stat"><strong>Fast to deliver</strong><span>Built from lead data so it can be generated in bulk and refined later.</span></div>
+    </div>
+  </div>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="tag">Services</div>
+        <h2>What the generated website highlights</h2>
+        <p class="sub">This template gives each business a believable, niche-specific landing page without requiring custom design work every time.</p>
+      </div>
+      <div class="grid-3"><article class="card"><h3>Routine maintenance</h3><p>Recurring mowing, trimming, cleanup, and property care presented as dependable ongoing service.</p></article><article class="card"><h3>Landscape upgrades</h3><p>Beds, plants, mulch, pathways, and curb-appeal improvements that feel premium but approachable.</p></article><article class="card"><h3>Seasonal cleanup</h3><p>Storm cleanup, leaf removal, refresh work, and prep for the next season.</p></article></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div class="tag">Gallery</div>
+        <h2>Visual proof without manual asset work</h2>
+        <p class="sub">The generator uses category-matched placeholder imagery so every page feels complete during outreach.</p>
+      </div>
+      <div class="proof"><figure><img src="https://loremflickr.com/800/600/lawn,mowing?lock=202" alt="Lawn care and edging" loading="lazy"><figcaption>Lawn care and edging</figcaption></figure><figure><img src="https://loremflickr.com/800/600/landscaping,garden?lock=203" alt="Landscape design and planting" loading="lazy"><figcaption>Landscape design and planting</figcaption></figure><figure><img src="https://loremflickr.com/800/600/autumn,leaves,yard?lock=204" alt="Seasonal cleanup and yard maintenance" loading="lazy"><figcaption>Seasonal cleanup and yard maintenance</figcaption></figure></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap split">
+      <div>
+        <div class="section-head">
+          <div class="tag">Pitch Notes</div>
+          <h2>What to say when you call Badger Green Yards</h2>
+          <p class="sub">The website itself becomes the demo. Your pitch is not hypothetical because the business can see its page immediately.</p>
+        </div>
+        <div class="list"><div class="list-item">Lead source: landscaper in Madison WI</div><div class="list-item">Website detected: No</div><div class="list-item">Website verification: verified no website</div><div class="list-item">Use the generated page URL as a live demo during the call.</div><div class="list-item">No website on Google Maps and no likely official website found in web search.</div><div class="list-item">Google Maps shows roughly 4.7 stars across 93 reviews.</div></div>
+      </div>
+      <div class="cta-panel">
+        <div class="tag" style="background:rgba(255,255,255,0.18);color:#fff">Business Details</div>
+        <h2 style="color:#fff;margin:0">Badger Green Yards</h2>
+        <div>Trade: Landscaper</div>
+        <div>Phone: (608) 555-0119</div>
+        <div>Category: Landscaper</div>
+        <div>Address: 480 Lake St, Madison, WI 53703</div>
+        <div>Google Maps: <a href="https://www.google.com/maps/place/example-landscaper" style="text-decoration:underline">View listing</a></div>
+        <a class="cta-btn" href="tel:6085550119">Call this business</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <div class="tag">FAQ</div>
+        <h2>Questions this repo automation answers</h2>
+        <p class="sub">These FAQs are geared toward the internal sales process rather than pretending the owner wrote the content.</p>
+      </div>
+      <div class="faq"><details><summary>Can the page work for small lawn crews?</summary><p>Yes. The template is intentionally simple and local so solo operators and small teams still look established.</p></details><details><summary>Does it only fit mowing companies?</summary><p>No. It also works for landscape design, cleanup, hardscape, and general yard service businesses.</p></details><details><summary>What makes this pitch stronger?</summary><p>You can show the owner a finished page built around their business before they spend anything.</p></details></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="cta-panel">
+        <div class="tag" style="background:rgba(255,255,255,0.18);color:#fff">Generated Outreach Site</div>
+        <h2 style="color:#fff;margin:0">Ready to pitch Badger Green Yards in Madison, WI</h2>
+        <p>This site was generated from lead data so it can be shown during outbound calls and improved if the owner is interested.</p>
+        <a class="cta-btn" href="tel:6085550119">Call (608) 555-0119</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>Badger Green Yards · Landscaper · Madison, WI</div>
+    <div>Generated by the repo automation pipeline for manual outbound sales.</div>
+  </footer>
+
+  <a class="mobile-bar" href="tel:6085550119">Call Badger Green Yards · (608) 555-0119</a>
+</body>
+</html>
