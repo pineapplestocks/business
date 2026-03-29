@@ -80,7 +80,7 @@
     .nav-cta:hover { background: var(--accent-dk); }
     @media(max-width:900px) { .nav-links { display: none; } }
 
-    .hero { position: relative; padding: 180px 24px 120px; background: url("https://loremflickr.com/1600/900/plumber,plumbing?lock=101") center 60% / cover no-repeat; color: #fff; }
+    .hero { position: relative; padding: 180px 24px 120px; background: linear-gradient(135deg, #081d38 0%, #0f2d55 55%, #163d6e 100%); color: #fff; }
     .hero::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,.72); }
     .hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: center; }
     .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 5px 12px; border-radius: var(--radius-sm); margin-bottom: 18px; }
@@ -125,11 +125,13 @@
     .service-card h3 { margin-bottom: 8px; }
     .service-card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
 
-    .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-    .gallery-grid figure { overflow: hidden; border-radius: var(--radius-md); }
-    .gallery-grid img { transition: transform .4s; }
-    .gallery-grid figure:hover img { transform: scale(1.04); }
-    .gallery-grid figcaption { padding: 10px 14px; font-size: 14px; color: var(--text-muted); background: var(--bg-card); }
+    .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; }
+    .process-step { background: var(--bg-card); border-radius: var(--radius-md); padding: 36px 28px; box-shadow: var(--shadow-sm); border-top: 4px solid var(--accent); text-align: center; position: relative; }
+    .process-num { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+    .process-icon { font-size: 36px; margin-bottom: 14px; display: block; }
+    .process-step h3 { font-size: 19px; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .process-step p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+    .process-connector { display: none; }
 
     .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
     .why-list { display: grid; gap: 16px; }
@@ -181,7 +183,7 @@
       .stats-inner { grid-template-columns: repeat(3,1fr); }
       .stat-item { padding: 16px 10px; }
       .stat-num { font-size: 20px; }
-      .problem-grid, .services-grid, .gallery-grid, .reviews-grid { grid-template-columns: 1fr; }
+      .problem-grid, .services-grid, .process-grid, .reviews-grid { grid-template-columns: 1fr; }
       .why-grid { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; gap: 32px; }
       .footer-bottom { flex-direction: column; text-align: center; }
@@ -320,23 +322,29 @@
   <section class="section" id="work">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">Our Work</div>
-        <h2>Jobs Done Right</h2>
-        <p class="lead">Every job is completed cleanly and backed by our workmanship guarantee.</p>
+        <div class="eyebrow">How It Works</div>
+        <h2>Fast, Simple, Done Right</h2>
+        <p class="lead">From your first call to a fixed pipe — here's exactly what to expect.</p>
       </div>
-      <div class="gallery-grid">
-        <figure>
-          <img src="https://loremflickr.com/800/600/plumbing,pipe,repair?lock=103" alt="Pipe repair and diagnostics" loading="lazy">
-          <figcaption>Pipe repair and leak diagnostics</figcaption>
-        </figure>
-        <figure>
-          <img src="https://loremflickr.com/800/600/plumbing,tools?lock=104" alt="Professional plumbing tools" loading="lazy">
-          <figcaption>Professional tools — clean work every time</figcaption>
-        </figure>
-        <figure>
-          <img src="https://loremflickr.com/800/600/bathroom,faucet,plumbing?lock=105" alt="Fixture installation" loading="lazy">
-          <figcaption>Fixture installation and replacement</figcaption>
-        </figure>
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="process-num">1</div>
+          <span class="process-icon">📞</span>
+          <h3>Call or Text Us</h3>
+          <p>Reach us any time — we answer fast. Describe the problem and we'll give you an honest upfront estimate before we ever show up.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">2</div>
+          <span class="process-icon">🔍</span>
+          <h3>We Diagnose On-Site</h3>
+          <p>Our licensed plumber arrives on time, inspects the issue thoroughly, and explains exactly what needs to be done — no upsells, no surprises.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">3</div>
+          <span class="process-icon">✅</span>
+          <h3>Fixed &amp; Guaranteed</h3>
+          <p>We complete the repair cleanly and efficiently. Every job is backed by our workmanship guarantee — if it's not right, we come back at no charge.</p>
+        </div>
       </div>
     </div>
   </section>

@@ -114,7 +114,7 @@
     .hero {
       position: relative;
       padding: 180px 24px 120px;
-      background: url("https://loremflickr.com/1600/900/water,heater?lock=301") center 60% / cover no-repeat;
+      background: linear-gradient(135deg, #1a0f00 0%, #2e1a00 45%, #4d2c1d 100%);
       color: #fff;
     }
     .hero::before {
@@ -255,11 +255,12 @@
     .service-card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
 
     /* ── GALLERY ── */
-    .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-    .gallery-grid figure { overflow: hidden; border-radius: var(--radius-md); }
-    .gallery-grid img { transition: transform .4s; }
-    .gallery-grid figure:hover img { transform: scale(1.04); }
-    .gallery-grid figcaption { padding: 10px 14px; font-size: 14px; color: var(--text-muted); background: var(--bg-card); }
+    .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; }
+    .process-step { background: var(--bg-card); border-radius: var(--radius-md); padding: 36px 28px; box-shadow: var(--shadow-sm); border-top: 4px solid var(--accent); text-align: center; }
+    .process-num { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+    .process-icon { font-size: 36px; margin-bottom: 14px; display: block; }
+    .process-step h3 { font-size: 19px; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .process-step p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
 
     /* ── WHY US ── */
     .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
@@ -393,7 +394,7 @@
       .stats-inner { grid-template-columns: 1fr 1fr 1fr; }
       .stat-item { padding: 16px 10px; }
       .stat-num { font-size: 22px; }
-      .problem-grid, .services-grid, .gallery-grid, .reviews-grid { grid-template-columns: 1fr; }
+      .problem-grid, .services-grid, .process-grid, .reviews-grid { grid-template-columns: 1fr; }
       .why-grid { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; gap: 32px; }
       .footer-bottom { flex-direction: column; text-align: center; }
@@ -534,27 +535,33 @@
     </div>
   </section>
 
-  <!-- GALLERY -->
+  <!-- HOW IT WORKS -->
   <section class="section" id="work">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">Our Work</div>
-        <h2>Jobs Done Right</h2>
-        <p class="lead">Every job is completed cleanly and backed by our workmanship guarantee.</p>
+        <div class="eyebrow">How It Works</div>
+        <h2>Hot Water, Fast</h2>
+        <p class="lead">From your first call to a working water heater — here's exactly what to expect.</p>
       </div>
-      <div class="gallery-grid">
-        <figure>
-          <img src="https://loremflickr.com/800/600/water,heater?lock=302" alt="Water heater installation" loading="lazy">
-          <figcaption>Water heater installation and replacement</figcaption>
-        </figure>
-        <figure>
-          <img src="https://loremflickr.com/800/600/plumbing,pipe?lock=303" alt="Pipe and system diagnostics" loading="lazy">
-          <figcaption>System diagnostics and pipe work</figcaption>
-        </figure>
-        <figure>
-          <img src="https://loremflickr.com/800/600/plumber,repair,service?lock=304" alt="In-home repair service" loading="lazy">
-          <figcaption>In-home repair — same-day service</figcaption>
-        </figure>
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="process-num">1</div>
+          <span class="process-icon">📞</span>
+          <h3>Call Us Anytime</h3>
+          <p>Tell us what's wrong — no hot water, strange noises, a leak. We'll give you an honest same-day estimate before we book anything.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">2</div>
+          <span class="process-icon">🔍</span>
+          <h3>We Diagnose On-Site</h3>
+          <p>Our licensed tech arrives on time, inspects your system, and explains your options clearly — repair or replace, with honest pricing upfront.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">3</div>
+          <span class="process-icon">🔥</span>
+          <h3>Hot Water Restored</h3>
+          <p>We complete the job the same day in most cases, clean up completely, and stand behind every repair with our workmanship guarantee.</p>
+        </div>
       </div>
     </div>
   </section>

@@ -83,7 +83,7 @@
     .nav-cta:hover { background: var(--accent-dk); }
     @media(max-width:900px) { .nav-links { display: none; } }
 
-    .hero { position: relative; padding: 180px 24px 120px; background: url("https://loremflickr.com/1600/900/landscaping,lawn?lock=201") center 60% / cover no-repeat; color: #fff; }
+    .hero { position: relative; padding: 180px 24px 120px; background: linear-gradient(135deg, #0e2610 0%, #1a3d1a 55%, #245524 100%); color: #fff; }
     .hero::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,.68); }
     .hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: center; }
     .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 5px 12px; border-radius: var(--radius-sm); margin-bottom: 18px; }
@@ -128,11 +128,12 @@
     .service-card h3 { margin-bottom: 8px; }
     .service-card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
 
-    .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-    .gallery-grid figure { overflow: hidden; border-radius: var(--radius-md); }
-    .gallery-grid img { transition: transform .4s; }
-    .gallery-grid figure:hover img { transform: scale(1.04); }
-    .gallery-grid figcaption { padding: 10px 14px; font-size: 14px; color: var(--text-muted); background: var(--bg-card); }
+    .process-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 28px; }
+    .process-step { background: var(--bg-card); border-radius: var(--radius-md); padding: 36px 28px; box-shadow: var(--shadow-sm); border-top: 4px solid var(--accent); text-align: center; }
+    .process-num { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: #fff; font-size: 22px; font-weight: 800; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+    .process-icon { font-size: 36px; margin-bottom: 14px; display: block; }
+    .process-step h3 { font-size: 19px; font-weight: 700; color: var(--primary); margin-bottom: 10px; }
+    .process-step p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
 
     .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
     .why-list { display: grid; gap: 16px; }
@@ -184,7 +185,7 @@
       .stats-inner { grid-template-columns: repeat(3,1fr); }
       .stat-item { padding: 16px 10px; }
       .stat-num { font-size: 20px; }
-      .problem-grid, .services-grid, .gallery-grid, .reviews-grid { grid-template-columns: 1fr; }
+      .problem-grid, .services-grid, .process-grid, .reviews-grid { grid-template-columns: 1fr; }
       .why-grid { grid-template-columns: 1fr; }
       .footer-top { grid-template-columns: 1fr; gap: 32px; }
       .footer-bottom { flex-direction: column; text-align: center; }
@@ -323,23 +324,29 @@
   <section class="section" id="work">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">Our Work</div>
-        <h2>Before &amp; After Results</h2>
-        <p class="lead">We take pride in every yard we touch — from routine maintenance to full landscape makeovers.</p>
+        <div class="eyebrow">How It Works</div>
+        <h2>Simple &amp; Hassle-Free</h2>
+        <p class="lead">Getting a great-looking yard is easier than you think — here's what to expect from start to finish.</p>
       </div>
-      <div class="gallery-grid">
-        <figure>
-          <img src="https://loremflickr.com/800/600/lawn,mowing?lock=202" alt="Lawn mowing and edging" loading="lazy">
-          <figcaption>Lawn mowing and clean edging</figcaption>
-        </figure>
-        <figure>
-          <img src="https://loremflickr.com/800/600/landscaping,garden?lock=203" alt="Landscape planting and design" loading="lazy">
-          <figcaption>Landscape planting and bed design</figcaption>
-        </figure>
-        <figure>
-          <img src="https://loremflickr.com/800/600/autumn,leaves,yard?lock=204" alt="Fall cleanup and leaf removal" loading="lazy">
-          <figcaption>Fall cleanup and leaf removal</figcaption>
-        </figure>
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="process-num">1</div>
+          <span class="process-icon">📋</span>
+          <h3>Get a Free Estimate</h3>
+          <p>Call or text us and tell us about your yard. We'll come out, take a look, and give you a clear quote — no pressure, no contracts required.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">2</div>
+          <span class="process-icon">🌿</span>
+          <h3>We Do the Work</h3>
+          <p>Our crew shows up on schedule with the right equipment. We treat your property with care and leave the job site clean every single time.</p>
+        </div>
+        <div class="process-step">
+          <div class="process-num">3</div>
+          <span class="process-icon">😊</span>
+          <h3>Enjoy Your Yard</h3>
+          <p>Come home to a yard you're proud of. We're flexible with scheduling and keep consistent crews so you always know who's showing up.</p>
+        </div>
       </div>
     </div>
   </section>
