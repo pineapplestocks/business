@@ -4,13 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Summit Pipe Rescue | Plumber in Salt Lake City, UT</title>
-  <meta name="description" content="Fast, reliable plumbing repair in Salt Lake City, UT. Leaks, drains, fixtures, and emergency plumbing. Call Summit Pipe Rescue at (801) 555-0142.">
+  <meta name="description" content="Fast, reliable plumbing in Salt Lake City, UT. Leaks, drains, fixtures, and emergency service. Licensed &amp; insured. Call (801) 555-0142.">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Summit Pipe Rescue | Plumber in Salt Lake City, UT">
-  <meta property="og:description" content="Fast, reliable plumbing in Salt Lake City, UT. Same-day service available. Call (801) 555-0142.">
+  <meta property="og:title" content="Summit Pipe Rescue | Plumber Salt Lake City UT">
+  <meta property="og:description" content="Same-day plumbing repair in Salt Lake City, UT. Licensed &amp; insured. Call (801) 555-0142.">
   <meta property="og:site_name" content="Summit Pipe Rescue">
   <meta name="theme-color" content="#0f2d55">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔧</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -35,106 +38,162 @@
   }
   </script>
   <style>
-    :root{
-      --primary: #0f2d55;
-      --accent: #e8401c;
-      --light: #e8f0f8;
-      --text: #17202a;
-      --muted: #4f5b67;
-      --white: #ffffff;
-      --border: #e5e7eb;
-      --radius: 16px;
-      --shadow: 0 16px 50px rgba(0,0,0,0.08);
+    :root {
+      --primary:    #0f2d55;
+      --primary-dk: #081d38;
+      --accent:     #e8401c;
+      --accent-dk:  #c4340f;
+      --text-dark:  #1a1a1a;
+      --text-body:  #333333;
+      --text-muted: #6b7280;
+      --bg-page:    #f5f7fa;
+      --bg-card:    #ffffff;
+      --border:     #e5e7eb;
+      --shadow-sm:  0 2px 8px rgba(0,0,0,0.07);
+      --shadow-md:  0 6px 24px rgba(0,0,0,0.09);
+      --shadow-lg:  0 16px 48px rgba(0,0,0,0.12);
+      --radius-sm:  6px;
+      --radius-md:  10px;
+      --radius-lg:  18px;
+      --max-w:      1280px;
     }
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
-    body{font-family:Segoe UI,Arial,sans-serif;color:var(--text);background:#fff;line-height:1.6}
-    a{text-decoration:none;color:inherit}
-    img{display:block;width:100%;height:auto}
-    header{
-      position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.96);
-      border-bottom:1px solid var(--border);backdrop-filter:blur(12px)
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Open Sans', sans-serif; font-size: 17px; line-height: 1.65; color: var(--text-body); background: #fff; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; width: 100%; height: auto; }
+
+    header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; transition: background .3s, box-shadow .3s; }
+    header.scrolled { background: #fff; box-shadow: 0 2px 16px rgba(0,0,0,0.10); }
+    .announcement { background: var(--accent); color: #fff; text-align: center; font-size: 13px; font-weight: 700; padding: 7px 20px; letter-spacing: .3px; }
+    .nav { max-width: var(--max-w); margin: 0 auto; padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .brand { font-weight: 800; font-size: 18px; color: #fff; line-height: 1.2; }
+    .brand span { display: block; font-size: 12px; font-weight: 600; opacity: .8; }
+    header.scrolled .brand { color: var(--primary); }
+    header.scrolled .brand span { opacity: 1; color: var(--text-muted); }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.85); transition: color .2s; }
+    .nav-links a:hover { color: #fff; }
+    header.scrolled .nav-links a { color: var(--text-muted); }
+    header.scrolled .nav-links a:hover { color: var(--primary); }
+    .nav-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #fff; padding: 11px 22px; border-radius: var(--radius-sm); font-weight: 700; font-size: 14px; transition: background .2s; white-space: nowrap; }
+    .nav-cta:hover { background: var(--accent-dk); }
+    @media(max-width:900px) { .nav-links { display: none; } }
+
+    .hero { position: relative; padding: 180px 24px 120px; background: url("https://loremflickr.com/1600/900/plumber,plumbing?lock=101") center 60% / cover no-repeat; color: #fff; }
+    .hero::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,.72); }
+    .hero-inner { position: relative; max-width: var(--max-w); margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: center; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #fff; font-size: 12px; font-weight: 800; letter-spacing: .5px; text-transform: uppercase; padding: 5px 12px; border-radius: var(--radius-sm); margin-bottom: 18px; }
+    .hero h1 { font-size: clamp(36px, 4.5vw, 54px); font-weight: 800; line-height: 1.1; margin-bottom: 18px; color: #fff; }
+    .hero p { font-size: 18px; line-height: 1.65; color: rgba(255,255,255,.88); max-width: 52ch; margin-bottom: 30px; }
+    .hero-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #fff; border: 2px solid var(--accent); padding: 14px 26px; border-radius: var(--radius-sm); font-weight: 700; font-size: 16px; transition: background .2s, color .2s; }
+    .btn-primary:hover { background: transparent; color: #fff; }
+    .btn-outline { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.7); padding: 14px 26px; border-radius: var(--radius-sm); font-weight: 700; font-size: 16px; transition: background .2s, color .2s; }
+    .btn-outline:hover { background: #fff; color: var(--text-dark); }
+    .hero-card { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); backdrop-filter: blur(10px); border-radius: var(--radius-lg); padding: 28px; }
+    .hero-card h2 { font-size: 17px; font-weight: 800; margin-bottom: 14px; color: #fff; }
+    .hero-card ul { padding-left: 18px; display: grid; gap: 8px; }
+    .hero-card li { font-size: 15px; color: rgba(255,255,255,.88); }
+
+    .stats-bar { background: var(--accent); position: relative; z-index: 10; margin-top: -44px; }
+    .stats-inner { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; display: grid; grid-template-columns: repeat(3, 1fr); }
+    .stat-item { padding: 22px 20px; text-align: center; border-right: 1px solid rgba(255,255,255,.25); }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-size: 30px; font-weight: 800; color: #fff; display: block; line-height: 1; }
+    .stat-label { font-size: 13px; font-weight: 700; color: rgba(255,255,255,.88); margin-top: 4px; display: block; }
+
+    .section { padding: 72px 24px; }
+    .section-bg { background: var(--bg-page); }
+    .wrap { max-width: var(--max-w); margin: 0 auto; }
+    .section-head { margin-bottom: 40px; }
+    .eyebrow { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    h2 { font-size: 32px; font-weight: 800; line-height: 1.2; color: var(--text-dark); margin-bottom: 12px; }
+    h3 { font-size: 20px; font-weight: 800; line-height: 1.3; color: var(--text-dark); }
+    .lead { font-size: 18px; color: var(--text-muted); max-width: 60ch; line-height: 1.6; }
+
+    .problem-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 36px; }
+    .problem-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 28px 24px; box-shadow: var(--shadow-md); border-top: 4px solid var(--accent); }
+    .problem-card .icon { font-size: 32px; margin-bottom: 12px; }
+    .problem-card h3 { margin-bottom: 8px; }
+    .problem-card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+    .services-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    .service-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 30px 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); transition: box-shadow .2s, transform .2s; }
+    .service-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-3px); }
+    .service-icon { width: 52px; height: 52px; background: var(--bg-page); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 26px; margin-bottom: 16px; }
+    .service-card h3 { margin-bottom: 8px; }
+    .service-card p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+    .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .gallery-grid figure { overflow: hidden; border-radius: var(--radius-md); }
+    .gallery-grid img { transition: transform .4s; }
+    .gallery-grid figure:hover img { transform: scale(1.04); }
+    .gallery-grid figcaption { padding: 10px 14px; font-size: 14px; color: var(--text-muted); background: var(--bg-card); }
+
+    .why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .why-list { display: grid; gap: 16px; }
+    .why-item { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; background: var(--bg-card); border-radius: var(--radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+    .why-check { width: 36px; height: 36px; flex-shrink: 0; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; font-weight: 800; }
+    .why-item h4 { font-size: 15px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; }
+    .why-item p { font-size: 14px; color: var(--text-muted); }
+    .contact-box { background: linear-gradient(145deg, var(--primary), var(--primary-dk)); border-radius: var(--radius-lg); padding: 36px; color: #fff; display: grid; gap: 14px; }
+    .contact-box h3 { font-size: 26px; color: #fff; }
+    .contact-box p { color: rgba(255,255,255,.85); font-size: 16px; }
+    .contact-detail { display: flex; align-items: center; gap: 10px; font-size: 15px; color: rgba(255,255,255,.9); }
+
+    .reviews-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
+    .review-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 28px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
+    .stars { color: #f59e0b; font-size: 17px; letter-spacing: 2px; margin-bottom: 12px; }
+    .review-card p { font-size: 15px; line-height: 1.65; color: var(--text-body); font-style: italic; }
+    .reviewer { margin-top: 16px; font-weight: 800; font-size: 14px; color: var(--text-dark); }
+    .reviewer span { font-weight: 400; color: var(--text-muted); }
+
+    .faq-grid { display: grid; gap: 12px; max-width: 860px; }
+    details { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+    summary { cursor: pointer; font-weight: 700; font-size: 16px; color: var(--text-dark); padding: 18px 22px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+    summary::after { content: '+'; font-size: 22px; color: var(--accent); font-weight: 400; }
+    details[open] summary::after { content: '−'; }
+    details p { padding: 0 22px 20px; font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+
+    .final-cta { background: linear-gradient(135deg, var(--primary), var(--primary-dk)); padding: 80px 24px; text-align: center; color: #fff; }
+    .final-cta h2 { color: #fff; font-size: clamp(28px, 4vw, 42px); margin-bottom: 14px; }
+    .final-cta p { color: rgba(255,255,255,.85); font-size: 18px; max-width: 52ch; margin: 0 auto 32px; }
+    .final-cta-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+
+    footer { background: #111; color: #9ca3af; font-size: 14px; }
+    .footer-top { max-width: var(--max-w); margin: 0 auto; padding: 60px 24px 40px; display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 48px; }
+    .footer-brand { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 10px; }
+    .footer-desc { font-size: 14px; line-height: 1.7; color: #9ca3af; margin-bottom: 20px; }
+    .footer-phone { font-size: 18px; font-weight: 800; color: var(--accent); }
+    .footer-heading { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: #fff; margin-bottom: 16px; }
+    .footer-links { display: grid; gap: 10px; list-style: none; }
+    .footer-links a { color: #9ca3af; font-size: 14px; transition: color .2s; }
+    .footer-links a:hover { color: #fff; }
+    .footer-bottom { border-top: 1px solid #222; max-width: var(--max-w); margin: 0 auto; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 13px; }
+
+    .mobile-bar { display: none; position: fixed; left: 16px; right: 16px; bottom: 16px; background: var(--accent); color: #fff; border-radius: 999px; padding: 16px 20px; text-align: center; font-weight: 800; font-size: 16px; box-shadow: 0 8px 32px rgba(232,64,28,.4); z-index: 200; }
+
+    @media(max-width:900px) {
+      .hero { padding: 140px 20px 80px; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .stats-inner { grid-template-columns: repeat(3,1fr); }
+      .stat-item { padding: 16px 10px; }
+      .stat-num { font-size: 20px; }
+      .problem-grid, .services-grid, .gallery-grid, .reviews-grid { grid-template-columns: 1fr; }
+      .why-grid { grid-template-columns: 1fr; }
+      .footer-top { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+      .mobile-bar { display: block; }
+      h2 { font-size: 26px; }
     }
-    .nav{
-      max-width:1120px;margin:0 auto;padding:14px 20px;
-      display:flex;justify-content:space-between;align-items:center;gap:16px
-    }
-    .brand{font-weight:800;color:var(--primary)}
-    .brand span{display:block;font-size:12px;font-weight:500;color:var(--muted)}
-    .nav-links{display:flex;gap:24px;list-style:none}
-    .nav-links a{font-size:14px;font-weight:600;color:var(--muted);transition:color .2s}
-    .nav-links a:hover{color:var(--primary)}
-    @media(max-width:900px){.nav-links{display:none}}
-    .phone-btn,.cta-btn{
-      display:inline-flex;align-items:center;justify-content:center;
-      padding:14px 24px;border-radius:999px;font-weight:700
-    }
-    .phone-btn{background:var(--primary);color:#fff}
-    .hero{
-      padding:88px 20px 64px;
-      background:
-        linear-gradient(135deg, rgba(0,0,0,.62), rgba(0,0,0,.35)),
-        url("https://loremflickr.com/1600/900/plumber,plumbing?lock=101") center/cover no-repeat;
-      color:#fff
-    }
-    .hero-inner{max-width:1120px;margin:0 auto;display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:end}
-    .eyebrow{
-      display:inline-block;margin-bottom:18px;padding:6px 12px;border-radius:999px;
-      background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.18);font-size:13px
-    }
-    h1{font-size:clamp(34px,5vw,58px);line-height:1.05;margin-bottom:16px;max-width:14ch}
-    .hero p{max-width:60ch;font-size:18px;color:rgba(255,255,255,0.9)}
-    .hero-actions{margin-top:26px;display:flex;flex-wrap:wrap;gap:14px}
-    .cta-btn{background:var(--accent);color:#fff}
-    .hero-card{
-      background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);
-      border-radius:24px;padding:24px;box-shadow:var(--shadow)
-    }
-    .hero-card h2{font-size:20px;margin-bottom:10px}
-    .hero-card ul{padding-left:18px}
-    .hero-card li+li{margin-top:8px}
-    .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
-    .stats{margin-top:-28px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .stat{background:#fff;border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
-    .stat strong{display:block;font-size:28px;color:var(--primary)}
-    section{padding:72px 0}
-    .section-head{margin-bottom:26px}
-    .tag{display:inline-block;background:var(--light);color:var(--primary);padding:6px 12px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:12px}
-    h2{font-size:clamp(28px,4vw,40px);line-height:1.1;margin-bottom:10px;color:var(--primary)}
-    .sub{max-width:62ch;color:var(--muted)}
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
-    .card h3{margin-bottom:8px;color:var(--primary)}
-    .proof{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .proof figure{overflow:hidden;border-radius:18px;border:1px solid var(--border);background:#fff;box-shadow:var(--shadow)}
-    .proof figcaption{padding:14px 16px;color:var(--muted);font-size:14px}
-    .split{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-    .list{display:grid;gap:14px}
-    .list-item{padding:18px 18px 18px 20px;border-left:4px solid var(--accent);background:var(--light);border-radius:14px}
-    .faq{display:grid;gap:14px}
-    .faq details{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px 20px;box-shadow:var(--shadow)}
-    .faq summary{cursor:pointer;font-weight:700;color:var(--primary)}
-    .faq p{margin-top:10px;color:var(--muted)}
-    .cta-panel{background:linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 65%, black));color:#fff;border-radius:28px;padding:32px;display:grid;gap:12px}
-    .cta-panel .cta-btn,.cta-panel .phone-btn{width:max-content}
-    .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .review{background:#fff;border:1px solid var(--border);border-radius:18px;padding:24px;box-shadow:var(--shadow)}
-    .stars{color:var(--accent);font-size:18px;margin-bottom:10px}
-    .reviewer{margin-top:12px;font-weight:700;font-size:14px;color:var(--primary)}
-    footer{padding:36px 20px 60px;color:var(--muted);text-align:center}
-    footer a{color:var(--accent)}
-    .mobile-bar{position:fixed;left:16px;right:16px;bottom:16px;background:var(--accent);color:#fff;border-radius:999px;padding:16px 18px;text-align:center;font-weight:700;box-shadow:var(--shadow)}
-    @media (max-width: 900px){
-      .hero-inner,.split,.grid-3,.proof,.stats,.reviews{grid-template-columns:1fr}
-      h1{max-width:none}
-      .nav{align-items:flex-start;flex-direction:column}
-      .mobile-bar{display:block}
-    }
-    @media (min-width: 901px){.mobile-bar{display:none}}
   </style>
 </head>
 <body>
-  <header>
+
+  <header id="site-header">
+    <div class="announcement">🚨 Emergency Plumbing Available — Call (801) 555-0142</div>
     <div class="nav">
       <div class="brand">Summit Pipe Rescue<span>Plumbing Services · Salt Lake City, UT</span></div>
       <ul class="nav-links">
@@ -144,80 +203,135 @@
         <li><a href="#faq">FAQ</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
-      <a class="phone-btn" href="tel:8015550142">Call (801) 555-0142</a>
+      <a class="nav-cta" href="tel:8015550142">📞 (801) 555-0142</a>
     </div>
   </header>
 
   <section class="hero">
     <div class="hero-inner">
       <div>
-        <div class="eyebrow">Serving Salt Lake City &amp; the Wasatch Front</div>
-        <h1>Plumbing Problems? We're On Our Way.</h1>
-        <p>Fast, honest plumbing repair for Salt Lake City homes and businesses. Leaks, drains, fixtures, and emergencies — handled same day.</p>
-        <div class="hero-actions">
-          <a class="cta-btn" href="tel:8015550142">Call Now — (801) 555-0142</a>
-          <a class="phone-btn" href="#services">See Our Services</a>
+        <div class="hero-badge">🔧 Salt Lake City's Trusted Plumbers</div>
+        <h1>Plumbing Problem?<br>We're On Our Way.</h1>
+        <p>Fast, honest plumbing repair for Salt Lake City homes and businesses. Leaks, burst pipes, clogged drains — handled same day with upfront pricing and guaranteed work.</p>
+        <div class="hero-btns">
+          <a class="btn-primary" href="tel:8015550142">📞 Call (801) 555-0142</a>
+          <a class="btn-outline" href="#services">See Our Services</a>
         </div>
       </div>
       <div class="hero-card">
-        <h2>Why SLC homeowners call us first</h2>
+        <h2>Why SLC Homeowners Call Us First</h2>
         <ul>
           <li>Same-day and emergency service available</li>
-          <li>Upfront pricing before any work starts</li>
+          <li>Upfront pricing — approved before we start</li>
           <li>4.8 stars across 126 Google reviews</li>
-          <li>Licensed, insured, and locally owned</li>
+          <li>Licensed in Utah, fully insured</li>
+          <li>Workmanship guaranteed on every job</li>
         </ul>
       </div>
     </div>
   </section>
 
-  <div class="wrap">
-    <div class="stats">
-      <div class="stat"><strong>Same Day</strong><span>Most calls booked same day when you call before noon.</span></div>
-      <div class="stat"><strong>4.8 ★ Rating</strong><span>Rated by 126 Salt Lake City customers on Google Maps.</span></div>
-      <div class="stat"><strong>Upfront Pricing</strong><span>You approve the price before we pick up a single tool.</span></div>
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <span class="stat-num">Same Day</span>
+        <span class="stat-label">Service Available</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">4.8 ★</span>
+        <span class="stat-label">126 Google Reviews</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">Guaranteed</span>
+        <span class="stat-label">Every Job, Every Time</span>
+      </div>
     </div>
   </div>
 
-  <section id="services">
+  <section class="section">
     <div class="wrap">
       <div class="section-head">
-        <div class="tag">Services</div>
-        <h2>Plumbing Repair &amp; Installation</h2>
-        <p class="sub">From dripping faucets to burst pipes, we diagnose and fix it fast — no runaround, no hidden fees.</p>
+        <div class="eyebrow">Common Problems We Fix</div>
+        <h2>When Plumbing Fails, Every Minute Costs You</h2>
+        <p class="lead">A small leak becomes water damage. A clogged drain becomes a backup. Don't wait — we diagnose fast and fix it right the first time.</p>
       </div>
-      <div class="grid-3">
-        <article class="card">
-          <h3>Leak Detection &amp; Repair</h3>
-          <p>Hidden leaks, active drips, burst pipes, and water damage prevention. We find it fast and fix it right.</p>
-        </article>
-        <article class="card">
-          <h3>Drain Cleaning</h3>
-          <p>Slow or clogged kitchen, bathroom, and main-line drains cleared quickly without damaging your pipes.</p>
-        </article>
-        <article class="card">
-          <h3>Fixture Installation</h3>
-          <p>Toilets, faucets, showerheads, garbage disposals, and water lines installed cleanly and correctly.</p>
-        </article>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="icon">💧</div>
+          <h3>Leaks &amp; Burst Pipes</h3>
+          <p>Active leaks and burst pipes cause water damage fast. We find the source quickly and stop it before your floors, walls, or cabinets take serious damage.</p>
+        </div>
+        <div class="problem-card">
+          <div class="icon">🚿</div>
+          <h3>Clogged or Slow Drains</h3>
+          <p>Kitchen drains, bathroom backups, main-line clogs — we clear them properly without damaging your pipes. No quick-fix that fails a week later.</p>
+        </div>
+        <div class="problem-card">
+          <div class="icon">🚽</div>
+          <h3>Broken Fixtures &amp; Running Toilets</h3>
+          <p>A running toilet wastes thousands of gallons a year. Broken faucets and failing fixtures get replaced cleanly and correctly the same day you call.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="work" style="background:#f9fafb">
+  <section class="section section-bg" id="services">
     <div class="wrap">
       <div class="section-head">
-        <div class="tag">Our Work</div>
-        <h2>Jobs Done Right</h2>
-        <p class="sub">Every job is completed cleanly and backed by our workmanship guarantee.</p>
+        <div class="eyebrow">What We Do</div>
+        <h2>Plumbing Services in Salt Lake City, UT</h2>
+        <p class="lead">From dripping faucets to full emergencies — we handle every plumbing job fast, cleanly, and with a price you approve up front.</p>
       </div>
-      <div class="proof">
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">💧</div>
+          <h3>Leak Detection &amp; Repair</h3>
+          <p>Hidden leaks, active drips, burst pipes, and slab leaks. We find them fast and fix them right — before they become major damage.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔩</div>
+          <h3>Drain Cleaning</h3>
+          <p>Kitchen, bathroom, and main-line drain clearing done properly. We won't just punch a hole — we clear the whole blockage.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🚿</div>
+          <h3>Fixture Installation</h3>
+          <p>Toilets, faucets, showerheads, garbage disposals, and water lines installed cleanly, correctly, and on the same day.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔧</div>
+          <h3>Pipe Repair &amp; Repiping</h3>
+          <p>Corroded, cracked, or aging pipes repaired or replaced. We assess honestly — repair when possible, replace only when necessary.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🚨</div>
+          <h3>Emergency Plumbing</h3>
+          <p>Plumbing emergencies don't wait for business hours. Call us when something goes wrong and we'll get someone out as fast as possible.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔍</div>
+          <h3>Free Diagnosis</h3>
+          <p>Not sure what's wrong? We'll come out, find the problem, and give you a straight upfront quote before any work begins.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="work">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">Our Work</div>
+        <h2>Jobs Done Right</h2>
+        <p class="lead">Every job is completed cleanly and backed by our workmanship guarantee.</p>
+      </div>
+      <div class="gallery-grid">
         <figure>
           <img src="https://loremflickr.com/800/600/plumbing,pipe,repair?lock=103" alt="Pipe repair and diagnostics" loading="lazy">
           <figcaption>Pipe repair and leak diagnostics</figcaption>
         </figure>
         <figure>
           <img src="https://loremflickr.com/800/600/plumbing,tools?lock=104" alt="Professional plumbing tools" loading="lazy">
-          <figcaption>Professional tools, clean work</figcaption>
+          <figcaption>Professional tools — clean work every time</figcaption>
         </figure>
         <figure>
           <img src="https://loremflickr.com/800/600/bathroom,faucet,plumbing?lock=105" alt="Fixture installation" loading="lazy">
@@ -227,109 +341,155 @@
     </div>
   </section>
 
-  <section id="contact">
-    <div class="wrap split">
-      <div>
-        <div class="section-head">
-          <div class="tag">Why Choose Us</div>
-          <h2>Salt Lake City's Trusted Plumbers</h2>
-          <p class="sub">We've built our reputation on showing up fast, being straight about pricing, and fixing things right the first time.</p>
-        </div>
-        <div class="list">
-          <div class="list-item"><strong>Fast response</strong> — same-day booking for most jobs</div>
-          <div class="list-item"><strong>No surprise bills</strong> — firm quote before we start</div>
-          <div class="list-item"><strong>Clean work</strong> — we protect your home and clean up after</div>
-          <div class="list-item"><strong>Licensed &amp; insured</strong> — Utah licensed plumbers, fully covered</div>
-          <div class="list-item"><strong>Guaranteed work</strong> — we stand behind every repair</div>
-        </div>
-      </div>
-      <div class="cta-panel">
-        <div class="tag" style="background:rgba(255,255,255,0.18);color:#fff">Get in Touch</div>
-        <h2 style="color:#fff;margin:0">Got a plumbing problem?</h2>
-        <p>Call us now. We serve Salt Lake City and the entire Wasatch Front — same-day appointments available.</p>
-        <div>📍 215 Main St, Salt Lake City, UT 84111</div>
-        <div>📞 (801) 555-0142</div>
-        <a class="cta-btn" href="tel:8015550142">Call (801) 555-0142</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="reviews" style="background:#f9fafb">
+  <section class="section section-bg" id="contact">
     <div class="wrap">
-      <div class="section-head">
-        <div class="tag">Reviews</div>
-        <h2>What Our Customers Say</h2>
-        <p class="sub">4.8 stars across 126 Google reviews from Salt Lake City homeowners.</p>
-      </div>
-      <div class="reviews">
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"Pipe burst at 7am and they were at my house by 9. Fixed everything quickly and the price was exactly what they quoted. Incredible service."</p>
-          <div class="reviewer">— Ryan T., Salt Lake City UT</div>
+      <div class="why-grid">
+        <div>
+          <div class="eyebrow">Why Choose Us</div>
+          <h2>Salt Lake City's Honest Plumbers</h2>
+          <p style="color:var(--text-muted);margin-bottom:28px;font-size:16px;">We've built our reputation on showing up fast, being straight about pricing, and fixing things right the first time — every time.</p>
+          <div class="why-list">
+            <div class="why-item">
+              <div class="why-check">✓</div>
+              <div><h4>Same-Day Response</h4><p>Most calls booked same day. Emergency service available when you need it most.</p></div>
+            </div>
+            <div class="why-item">
+              <div class="why-check">✓</div>
+              <div><h4>No Surprise Bills</h4><p>Firm upfront quote before we touch anything. The price we quote is the price you pay.</p></div>
+            </div>
+            <div class="why-item">
+              <div class="why-check">✓</div>
+              <div><h4>Utah Licensed &amp; Insured</h4><p>Fully licensed plumbers in Utah. Your home is fully protected on every job.</p></div>
+            </div>
+            <div class="why-item">
+              <div class="why-check">✓</div>
+              <div><h4>Work Guaranteed</h4><p>Every repair comes with a workmanship guarantee. We come back if something isn't right.</p></div>
+            </div>
+          </div>
         </div>
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"Had a slow drain that two other plumbers couldn't clear. Summit Pipe Rescue fixed it in 30 minutes. Should've called them first."</p>
-          <div class="reviewer">— Ashley M., Murray UT</div>
-        </div>
-        <div class="review">
-          <div class="stars">★★★★★</div>
-          <p>"Very professional. They explained what was wrong, gave me a fair price, and didn't try to upsell me on anything. Will use again."</p>
-          <div class="reviewer">— Marcus D., West Jordan UT</div>
+        <div class="contact-box">
+          <div>
+            <div class="eyebrow" style="color:rgba(255,255,255,.7)">Get in Touch</div>
+            <h3>Got a plumbing problem?</h3>
+          </div>
+          <p>Call us now. We serve Salt Lake City and the entire Wasatch Front — same-day appointments available.</p>
+          <div class="contact-detail">📍 <strong>215 Main St, Salt Lake City, UT 84111</strong></div>
+          <div class="contact-detail">📞 <strong>(801) 555-0142</strong></div>
+          <a class="btn-primary" href="tel:8015550142" style="margin-top:6px">Call Now — Same Day Available</a>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="faq">
+  <section class="section" id="reviews">
     <div class="wrap">
       <div class="section-head">
-        <div class="tag">FAQ</div>
+        <div class="eyebrow">Customer Reviews</div>
+        <h2>What Salt Lake City Homeowners Say</h2>
+        <p class="lead">4.8 stars across 126 Google reviews from Wasatch Front homeowners.</p>
+      </div>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>"Pipe burst at 7am and they were at my house by 9. Fixed everything quickly and the price was exactly what they quoted. Absolutely incredible service."</p>
+          <div class="reviewer">Ryan T. <span>· Salt Lake City, UT</span></div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>"Had a slow drain two other plumbers couldn't fix. Summit Pipe Rescue cleared it in 30 minutes. Should've called them first — lesson learned."</p>
+          <div class="reviewer">Ashley M. <span>· Murray, UT</span></div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p>"Very professional. Explained exactly what was wrong, gave me a fair price, and didn't try to upsell anything I didn't need. Will use again."</p>
+          <div class="reviewer">Marcus D. <span>· West Jordan, UT</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-bg" id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="eyebrow">FAQ</div>
         <h2>Common Questions</h2>
-        <p class="sub">What Salt Lake City homeowners ask us before booking.</p>
+        <p class="lead">What Salt Lake City homeowners ask us before booking.</p>
       </div>
-      <div class="faq">
+      <div class="faq-grid">
         <details>
           <summary>Do you offer emergency plumbing service?</summary>
           <p>Yes. For urgent situations like burst pipes or major leaks, call (801) 555-0142 and we'll get someone out as fast as possible.</p>
         </details>
         <details>
           <summary>How does your pricing work?</summary>
-          <p>We give you a firm, upfront quote after diagnosing the problem. You approve it before we do any work — no surprise charges at the end.</p>
+          <p>We give you a firm, upfront quote after diagnosing the problem. You approve it before we do any work — no surprises on the final bill.</p>
         </details>
         <details>
           <summary>What areas do you serve?</summary>
           <p>We serve Salt Lake City and the Wasatch Front including Murray, West Jordan, Sandy, Draper, Taylorsville, and South Jordan.</p>
         </details>
         <details>
-          <summary>Are you licensed and insured?</summary>
-          <p>Yes — fully licensed in Utah and insured on every job. Ask us for our license number anytime.</p>
+          <summary>Are you licensed and insured in Utah?</summary>
+          <p>Yes — fully licensed in Utah and insured on every job. Ask us for our license number anytime, we're happy to share it.</p>
         </details>
         <details>
           <summary>Do you guarantee your work?</summary>
-          <p>Absolutely. All repairs come with a workmanship guarantee. If something we fixed has an issue, we'll come back and make it right.</p>
+          <p>Absolutely. All repairs come with a workmanship guarantee. If something we fixed has an issue, we come back and make it right.</p>
         </details>
       </div>
     </div>
   </section>
 
-  <section>
-    <div class="wrap">
-      <div class="cta-panel">
-        <div class="tag" style="background:rgba(255,255,255,0.18);color:#fff">Salt Lake City, UT</div>
-        <h2 style="color:#fff;margin:0">Plumbing issue? Call us now.</h2>
-        <p>Summit Pipe Rescue — fast, honest plumbing for Salt Lake City homeowners. Same-day service available.</p>
-        <a class="cta-btn" href="tel:8015550142">Call (801) 555-0142</a>
-      </div>
+  <section class="final-cta">
+    <h2>Plumbing Issue? Call Us Right Now.</h2>
+    <p>Summit Pipe Rescue — fast, honest plumbing for Salt Lake City homeowners. Same-day service, upfront pricing, work guaranteed.</p>
+    <div class="final-cta-btns">
+      <a class="btn-primary" href="tel:8015550142">📞 Call (801) 555-0142</a>
+      <a class="btn-outline" href="#services">View All Services</a>
     </div>
   </section>
 
   <footer>
-    <div>Summit Pipe Rescue · Plumbing Services · Salt Lake City, UT 84111</div>
-    <div style="margin-top:8px"><a href="tel:8015550142">(801) 555-0142</a> · 215 Main St, Salt Lake City, UT</div>
-    <div style="margin-top:12px;font-size:13px">&copy; 2025 Summit Pipe Rescue. All rights reserved.</div>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">Summit Pipe Rescue</div>
+        <p class="footer-desc">Salt Lake City's trusted plumbing specialists. Fast, honest service for Wasatch Front homeowners — same-day service, upfront pricing, guaranteed work.</p>
+        <div class="footer-phone">(801) 555-0142</div>
+        <p style="margin-top:6px;font-size:13px;">215 Main St, Salt Lake City, UT 84111</p>
+      </div>
+      <div>
+        <div class="footer-heading">Services</div>
+        <ul class="footer-links">
+          <li><a href="#services">Leak Detection &amp; Repair</a></li>
+          <li><a href="#services">Drain Cleaning</a></li>
+          <li><a href="#services">Fixture Installation</a></li>
+          <li><a href="#services">Pipe Repair &amp; Repiping</a></li>
+          <li><a href="#services">Emergency Plumbing</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-heading">Company</div>
+        <ul class="footer-links">
+          <li><a href="#contact">Contact Us</a></li>
+          <li><a href="#reviews">Customer Reviews</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="tel:8015550142">Call (801) 555-0142</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Summit Pipe Rescue. All rights reserved.</span>
+      <span>Plumbing Services · Salt Lake City, UT</span>
+    </div>
   </footer>
 
-  <a class="mobile-bar" href="tel:8015550142">Call Now — (801) 555-0142</a>
+  <a class="mobile-bar" href="tel:8015550142">📞 Call Now — (801) 555-0142</a>
+
+  <script>
+    const header = document.getElementById('site-header');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 60);
+    });
+  </script>
 </body>
 </html>
