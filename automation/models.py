@@ -46,6 +46,7 @@ CSV_FIELDS = [
     "times_seen",
     "generated_site_url",
     "generated_site_path",
+    "short_url",
     "pitch_status",
     "last_called_on",
     "notes",
@@ -83,6 +84,7 @@ class Lead:
     times_seen: int = 1
     generated_site_url: str = ""
     generated_site_path: str = ""
+    short_url: str = ""
     pitch_status: str = "new"
     last_called_on: str = ""
     notes: str = ""
@@ -186,6 +188,7 @@ class Lead:
             times_seen=int((row.get("times_seen") or "1").strip() or "1"),
             generated_site_url=row.get("generated_site_url") or "",
             generated_site_path=row.get("generated_site_path") or "",
+            short_url=row.get("short_url") or "",
             pitch_status=row.get("pitch_status") or "new",
             last_called_on=row.get("last_called_on") or "",
             notes=row.get("notes") or "",
@@ -222,6 +225,7 @@ class Lead:
             "times_seen": str(self.times_seen),
             "generated_site_url": self.generated_site_url,
             "generated_site_path": self.generated_site_path,
+            "short_url": self.short_url,
             "pitch_status": self.pitch_status,
             "last_called_on": self.last_called_on,
             "notes": self.notes,

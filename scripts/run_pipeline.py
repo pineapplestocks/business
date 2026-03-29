@@ -168,7 +168,18 @@ def main() -> None:
         ],
     )
 
-    # Step 3: Sync to Zoho CRM
+    # Step 3: Generate short URLs via is.gd
+    run_step(
+        "shorten",
+        [
+            sys.executable,
+            "scripts/shorten_links.py",
+            "--input",
+            str(args.generated_leads_output),
+        ],
+    )
+
+    # Step 4: Sync to Zoho CRM
     if not args.skip_zoho_sync:
         zoho_cmd = [
             sys.executable,

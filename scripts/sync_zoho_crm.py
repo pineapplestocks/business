@@ -129,7 +129,9 @@ def _build_description(lead: Lead) -> str:
     parts.append(f"Website verification: {lead.website_verification_status}")
     if lead.website_verification_notes:
         parts.append(f"Notes: {lead.website_verification_notes}")
-    if lead.generated_site_url:
+    if lead.short_url:
+        parts.append(f"Demo site: {lead.short_url}")
+    elif lead.generated_site_url:
         parts.append(f"Demo site: {lead.generated_site_url}")
     if lead.google_maps_url:
         parts.append(f"Google Maps: {lead.google_maps_url}")
@@ -148,7 +150,7 @@ def _lead_to_zoho(lead: Lead) -> dict:
         "Lead_Source": "Google Maps — No-Website Pipeline",
         "Lead_Status": "Not Contacted",
         "Description": _build_description(lead),
-        "Website": lead.generated_site_url or "",
+        "Website": lead.short_url or lead.generated_site_url or "",
     }
 
 
