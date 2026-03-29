@@ -48,6 +48,36 @@ CALL_OUTCOME_OPTIONS = [
     "sold",
 ]
 
+CRM_RECORD_FIELDS = [
+    "record_id",
+    "active",
+    "business_name",
+    "trade",
+    "city",
+    "state",
+    "phone",
+    "category",
+    "source_query",
+    "google_maps_url",
+    "generated_site_url",
+    "website_verification_status",
+    "website_verification_notes",
+    "pitch_status",
+    "call_outcome",
+    "last_called_on",
+    "next_follow_up_on",
+    "owner_name",
+    "owner_email",
+    "quoted_price",
+    "sale_amount",
+    "sale_date",
+    "call_summary",
+    "notes",
+    "created_at",
+    "updated_at",
+    "synced_at",
+]
+
 
 def now_iso() -> str:
     return datetime.now(UTC).replace(microsecond=0).isoformat()
@@ -109,6 +139,70 @@ def _preserve_existing_fields(record: dict[str, Any], existing: dict[str, Any]) 
     return merged
 
 
+def sort_crm_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(
+        records,
+        key=lambda record: (
+            not record.get("active", True),
+            record.get("pitch_status", ""),
+            record.get("city", ""),
+            record.get("business_name", ""),
+        ),
+    )
+
+
+def build_crm_store_from_leads(
+    *,
+    leads: list[Lead],
+    existing_records: list[dict[str, Any]],
+    source_file: str,
+    include_unknown_status: bool = False,
+) -> dict[str, Any]:
+    qualifying = [lead for lead in leads if lead.qualifies_for_pitch(include_unknown_status=include_unknown_status)]
+
+    existing_by_id = {record["record_id"]: record for record in existing_records}
+    active_ids: set[str] = set()
+    records: list[dict[str, Any]] = []
+
+    for lead in sorted(qualifying, key=lambda item: (item.city, item.trade, item.business_name)):
+        base = base_record_from_lead(lead)
+        record_id = base["record_id"]
+        active_ids.add(record_id)
+        if record_id in existing_by_id:
+            base = _preserve_existing_fields(base, existing_by_id[record_id])
+        records.append(base)
+
+    for record_id, existing in existing_by_id.items():
+        if record_id in active_ids:
+            continue
+        archived = dict(existing)
+        archived["active"] = False
+        archived["synced_at"] = now_iso()
+        records.append(archived)
+
+    return {
+        "source_file": source_file,
+        "records": sort_crm_records(records),
+    }
+
+
+def build_public_crm_snapshot(
+    *,
+    leads: list[Lead],
+    source_file: str,
+    include_unknown_status: bool = False,
+) -> dict[str, Any]:
+    qualifying = [lead for lead in leads if lead.qualifies_for_pitch(include_unknown_status=include_unknown_status)]
+    records = [
+        base_record_from_lead(lead)
+        for lead in sorted(qualifying, key=lambda item: (item.city, item.trade, item.business_name))
+    ]
+    return {
+        "source_file": source_file,
+        "records": sort_crm_records(records),
+    }
+
+
 def load_crm_store(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {"updated_at": "", "records": []}
@@ -136,41 +230,13 @@ def sync_crm_store(
     include_unknown_status: bool = False,
 ) -> dict[str, Any]:
     leads = read_leads(leads_path)
-    qualifying = [lead for lead in leads if lead.qualifies_for_pitch(include_unknown_status=include_unknown_status)]
-
     store = load_crm_store(store_path)
-    existing_by_id = {record["record_id"]: record for record in store.get("records", [])}
-    active_ids: set[str] = set()
-    records: list[dict[str, Any]] = []
-
-    for lead in sorted(qualifying, key=lambda item: (item.city, item.trade, item.business_name)):
-        base = base_record_from_lead(lead)
-        record_id = base["record_id"]
-        active_ids.add(record_id)
-        if record_id in existing_by_id:
-            base = _preserve_existing_fields(base, existing_by_id[record_id])
-        records.append(base)
-
-    for record_id, existing in existing_by_id.items():
-        if record_id in active_ids:
-            continue
-        archived = dict(existing)
-        archived["active"] = False
-        archived["synced_at"] = now_iso()
-        records.append(archived)
-
-    next_store = {
-        "source_file": str(leads_path),
-        "records": sorted(
-            records,
-            key=lambda record: (
-                not record.get("active", True),
-                record.get("pitch_status", ""),
-                record.get("city", ""),
-                record.get("business_name", ""),
-            ),
-        ),
-    }
+    next_store = build_crm_store_from_leads(
+        leads=leads,
+        existing_records=store.get("records", []),
+        source_file=str(leads_path),
+        include_unknown_status=include_unknown_status,
+    )
     save_crm_store(store_path, next_store)
     return next_store
 
@@ -203,8 +269,7 @@ def crm_stats(records: list[dict[str, Any]]) -> dict[str, Any]:
     }
 
 
-def export_crm_records_to_csv(store_path: Path, output_path: Path) -> None:
-    store = load_crm_store(store_path)
+def export_records_to_csv(records: list[dict[str, Any]], output_path: Path) -> None:
     fields = [
         "business_name",
         "trade",
@@ -225,7 +290,12 @@ def export_crm_records_to_csv(store_path: Path, output_path: Path) -> None:
     with output_path.open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)
         writer.writeheader()
-        for record in store.get("records", []):
+        for record in records:
             if not record.get("active", True):
                 continue
             writer.writerow({field: record.get(field, "") for field in fields})
+
+
+def export_crm_records_to_csv(store_path: Path, output_path: Path) -> None:
+    store = load_crm_store(store_path)
+    export_records_to_csv(store.get("records", []), output_path)

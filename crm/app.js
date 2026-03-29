@@ -52,7 +52,7 @@ const CRM_CSV_FIELDS = [
   "call_summary",
 ]
 
-const PUBLIC_STORE_KEY = `business-crm-public:${new URL(".", window.location.href).pathname.replace(/\/+$/, "") || "/"}`
+const CONNECTION_STORAGE_KEY = "business-crm-api-connection"
 
 const state = {
   mode: "loading",
@@ -66,12 +66,14 @@ const state = {
   selectedId: null,
   publishedUpdatedAt: "",
   sourceFile: "",
-  publicStore: {
-    version: 1,
-    updated_at: "",
-    source_updated_at: "",
-    overrides: {},
+  connection: {
+    baseUrl: "",
+    token: "",
   },
+  apiConfig: {
+    auth_required: false,
+  },
+  connectionPanelOpen: false,
   filters: {
     search: "",
     pitchStatus: "",
@@ -83,6 +85,13 @@ const state = {
 const elements = {
   modeBadge: document.querySelector("#modeBadge"),
   modeNotice: document.querySelector("#modeNotice"),
+  connectionPanel: document.querySelector("#connectionPanel"),
+  connectionToggleButton: document.querySelector("#connectionToggleButton"),
+  apiBaseInput: document.querySelector("#apiBaseInput"),
+  apiTokenInput: document.querySelector("#apiTokenInput"),
+  saveConnectionButton: document.querySelector("#saveConnectionButton"),
+  clearConnectionButton: document.querySelector("#clearConnectionButton"),
+  connectionMessage: document.querySelector("#connectionMessage"),
   statsRow: document.querySelector("#statsRow"),
   searchInput: document.querySelector("#searchInput"),
   pitchFilter: document.querySelector("#pitchFilter"),
@@ -109,10 +118,6 @@ const elements = {
   saveButton: document.querySelector("#saveButton"),
   syncButton: document.querySelector("#syncButton"),
   exportCsvButton: document.querySelector("#exportCsvButton"),
-  exportBackupButton: document.querySelector("#exportBackupButton"),
-  importBackupButton: document.querySelector("#importBackupButton"),
-  resetBrowserButton: document.querySelector("#resetBrowserButton"),
-  importBackupInput: document.querySelector("#importBackupInput"),
 }
 
 const formFields = [...CRM_EDITABLE_FIELDS]
@@ -130,10 +135,6 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;")
-}
-
-function nowIso() {
-  return new Date().toISOString()
 }
 
 function formatDateTime(value) {
@@ -213,89 +214,137 @@ function computeStats(records) {
   }
 }
 
-function emptyPublicStore() {
-  return {
-    version: 1,
-    updated_at: "",
-    source_updated_at: "",
-    overrides: {},
-  }
+function normalizeApiBase(baseUrl) {
+  return String(baseUrl || "").trim().replace(/\/+$/, "")
 }
 
-function normalizePublicStore(store) {
-  if (!store || typeof store !== "object") {
-    return emptyPublicStore()
+function sameOriginApiBase() {
+  if (window.location.pathname.includes("/crm/")) {
+    return ""
   }
-
-  return {
-    version: Number(store.version) || 1,
-    updated_at: typeof store.updated_at === "string" ? store.updated_at : "",
-    source_updated_at: typeof store.source_updated_at === "string" ? store.source_updated_at : "",
-    overrides: store.overrides && typeof store.overrides === "object" ? store.overrides : {},
-  }
+  return window.location.origin
 }
 
-function loadPublicStore() {
+function loadSavedConnection() {
   try {
-    return normalizePublicStore(JSON.parse(window.localStorage.getItem(PUBLIC_STORE_KEY) || "null"))
+    const parsed = JSON.parse(window.localStorage.getItem(CONNECTION_STORAGE_KEY) || "null")
+    if (!parsed || typeof parsed !== "object") {
+      return { baseUrl: "", token: "" }
+    }
+    return {
+      baseUrl: normalizeApiBase(parsed.baseUrl),
+      token: String(parsed.token || ""),
+    }
   } catch (error) {
-    return emptyPublicStore()
+    return { baseUrl: "", token: "" }
   }
 }
 
-function savePublicStore(store) {
-  const normalized = normalizePublicStore(store)
-  normalized.updated_at = nowIso()
-  window.localStorage.setItem(PUBLIC_STORE_KEY, JSON.stringify(normalized))
-  state.publicStore = normalized
+function saveConnection(connection) {
+  const normalized = {
+    baseUrl: normalizeApiBase(connection.baseUrl),
+    token: String(connection.token || ""),
+  }
+  window.localStorage.setItem(CONNECTION_STORAGE_KEY, JSON.stringify(normalized))
+  state.connection = normalized
 }
 
-function mergePublicOverrides(records, store) {
-  const overrides = normalizePublicStore(store).overrides
-  return (records || []).map((record) => {
-    const override = overrides[record.record_id]
-    if (!override || typeof override !== "object") {
-      return record
-    }
+function clearSavedConnection() {
+  window.localStorage.removeItem(CONNECTION_STORAGE_KEY)
+  state.connection = { baseUrl: "", token: "" }
+}
 
-    const merged = { ...record, has_local_changes: true }
-    for (const field of CRM_EDITABLE_FIELDS) {
-      if (field in override) {
-        merged[field] = override[field]
-      }
-    }
-    if (override.updated_at) {
-      merged.updated_at = override.updated_at
-    }
-    return merged
+function activeApiBase() {
+  return normalizeApiBase(state.connection.baseUrl || sameOriginApiBase())
+}
+
+function hasWritableApi() {
+  return state.mode === "api" && Boolean(activeApiBase())
+}
+
+function apiUrl(path) {
+  return new URL(String(path).replace(/^\/+/, ""), `${activeApiBase()}/`).toString()
+}
+
+function apiHeaders(extraHeaders = {}) {
+  const headers = { ...extraHeaders }
+  if (state.connection.token) {
+    headers.Authorization = `Bearer ${state.connection.token}`
+  }
+  return headers
+}
+
+async function fetchJson(url, options = {}) {
+  const response = await fetch(url, options)
+  if (!response.ok) {
+    throw new Error(`Request failed with ${response.status}`)
+  }
+  return response.json()
+}
+
+async function fetchApiJson(path, options = {}) {
+  const headers = apiHeaders(options.headers || {})
+  return fetchJson(apiUrl(path), {
+    ...options,
+    headers,
   })
 }
 
+function staticDataUrl() {
+  return new URL("../data/crm_records.json", window.location.href).toString()
+}
+
+function setSaveMessage(message, tone = "") {
+  elements.saveMessage.textContent = message
+  elements.saveMessage.className = `save-message${tone ? ` ${tone}` : ""}`
+}
+
+function setConnectionMessage(message, tone = "") {
+  elements.connectionMessage.textContent = message
+  elements.connectionMessage.className = `save-message${tone ? ` ${tone}` : ""}`
+}
+
+function setConnectionPanel(open) {
+  state.connectionPanelOpen = open
+  elements.connectionPanel.classList.toggle("hidden", !open)
+}
+
+function renderConnectionFields() {
+  elements.apiBaseInput.value = state.connection.baseUrl || sameOriginApiBase()
+  elements.apiTokenInput.value = state.connection.token || ""
+}
+
+function setFormDisabled(disabled) {
+  elements.recordForm.querySelectorAll("input, select, textarea").forEach((field) => {
+    field.disabled = disabled
+  })
+  elements.saveButton.disabled = disabled
+  elements.saveButton.textContent = disabled ? "Connect Live CRM To Save" : "Save Record"
+}
+
 function setModeUi() {
+  renderConnectionFields()
+
   if (state.mode === "api") {
-    elements.modeBadge.textContent = "Live API"
+    elements.modeBadge.textContent = "Live CRM"
     elements.modeBadge.className = "mode-badge mode-api"
     elements.modeNotice.textContent = state.sourceFile
-      ? `Connected to the live local CRM. Changes save immediately to the shared store. Lead source: ${state.sourceFile}`
-      : "Connected to the live local CRM. Changes save immediately to the shared store."
+      ? `Connected to the shared CRM API at ${activeApiBase()}. Changes save centrally for every device using this same CRM server. Lead source: ${state.sourceFile}`
+      : `Connected to the shared CRM API at ${activeApiBase()}. Changes save centrally for every device using this same CRM server.`
     elements.modeNotice.classList.remove("hidden")
     elements.syncButton.textContent = "Sync Leads"
-    elements.exportBackupButton.classList.add("hidden")
-    elements.importBackupButton.classList.add("hidden")
-    elements.resetBrowserButton.classList.add("hidden")
+    setFormDisabled(false)
     return
   }
 
-  elements.modeBadge.textContent = "Public CRM"
+  elements.modeBadge.textContent = "Public Snapshot"
   elements.modeBadge.className = "mode-badge mode-static"
   elements.modeNotice.textContent = state.publishedUpdatedAt
-    ? `Loaded the published CRM snapshot from ${formatDateTime(state.publishedUpdatedAt)}. Changes save in this browser on this device, so export a backup if you want to move them somewhere else.`
-    : "Loaded the published CRM snapshot. Changes save in this browser on this device, so export a backup if you want to move them somewhere else."
+    ? `Viewing the published CRM snapshot from ${formatDateTime(state.publishedUpdatedAt)}. To save call notes, deal stages, and sales centrally, connect this page to the live CRM API.`
+    : "Viewing the published CRM snapshot. To save call notes, deal stages, and sales centrally, connect this page to the live CRM API."
   elements.modeNotice.classList.remove("hidden")
   elements.syncButton.textContent = "Refresh Snapshot"
-  elements.exportBackupButton.classList.remove("hidden")
-  elements.importBackupButton.classList.remove("hidden")
-  elements.resetBrowserButton.classList.remove("hidden")
+  setFormDisabled(true)
 }
 
 function renderStats() {
@@ -346,6 +395,7 @@ function renderFilters() {
       ),
     )
     .join("")
+
   const outcomeOptions = ['<option value="">All outcomes</option>']
     .concat(
       state.options.call_outcomes.map(
@@ -384,20 +434,13 @@ function renderLeadList() {
       const classes = ["lead-item"]
       if (isActive) classes.push("active")
 
-      const secondaryPills = [
-        `<span class="pill">${escapeHtml(labelize(record.pitch_status || "new"))}</span>`,
-        `<span class="pill">${escapeHtml(labelize(record.call_outcome || "not_called"))}</span>`,
-      ]
-      if (record.has_local_changes) {
-        secondaryPills.push('<span class="pill pill-local">Browser Saved</span>')
-      }
-
       return `
         <button class="${classes.join(" ")}" data-record-id="${escapeHtml(record.record_id)}" type="button">
           <div class="lead-name">${escapeHtml(record.business_name)}</div>
           <div class="lead-meta">${escapeHtml(location || "Location unknown")} · ${escapeHtml(record.phone || "No phone")}</div>
           <div class="lead-submeta">
-            ${secondaryPills.join("")}
+            <span class="pill">${escapeHtml(labelize(record.pitch_status || "new"))}</span>
+            <span class="pill">${escapeHtml(labelize(record.call_outcome || "not_called"))}</span>
           </div>
           <div class="lead-submeta">
             <span>${escapeHtml(followUp)}</span>
@@ -436,9 +479,6 @@ function setLinkState(link, href, label) {
 }
 
 function detailUpdatedText(record) {
-  if (record.has_local_changes) {
-    return record.updated_at ? `Saved in this browser ${formatDateTime(record.updated_at)}` : "Saved in this browser"
-  }
   return record.updated_at ? `Last updated ${formatDateTime(record.updated_at)}` : ""
 }
 
@@ -481,29 +521,6 @@ function renderDetail() {
   document.querySelector("#notes").value = record.notes || ""
 }
 
-function setSaveMessage(message, tone = "") {
-  elements.saveMessage.textContent = message
-  elements.saveMessage.className = `save-message${tone ? ` ${tone}` : ""}`
-}
-
-async function fetchJson(endpoint, options = {}) {
-  const response = await fetch(endpoint, options)
-  if (!response.ok) {
-    throw new Error(`Request failed with ${response.status}`)
-  }
-  return response.json()
-}
-
-function staticDataUrl() {
-  return new URL("../data/crm_records.json", window.location.href).toString()
-}
-
-function shouldPreferApiMode() {
-  const isLocalHost = ["127.0.0.1", "localhost"].includes(window.location.hostname) || window.location.port === "8765"
-  const isNestedStaticPath = window.location.pathname.includes("/crm/")
-  return isLocalHost && !isNestedStaticPath
-}
-
 function applyPayload(payload, preserveSelection = true) {
   const currentSelection = preserveSelection ? state.selectedId : null
   state.records = payload.records || []
@@ -526,19 +543,18 @@ function applyPayload(payload, preserveSelection = true) {
 }
 
 async function loadApiRecords(preserveSelection = true) {
-  const payload = await fetchJson("/api/records")
+  state.apiConfig = await fetchApiJson("/api/config")
+  const payload = await fetchApiJson("/api/records")
   state.mode = "api"
   applyPayload(payload, preserveSelection)
 }
 
 async function loadStaticRecords(preserveSelection = true) {
   const snapshot = await fetchJson(staticDataUrl(), { cache: "no-store" })
-  state.mode = "static"
-  state.publicStore = loadPublicStore()
   const snapshotRecords = Array.isArray(snapshot) ? snapshot : snapshot.records || []
   const payload = {
-    records: mergePublicOverrides(snapshotRecords, state.publicStore),
-    stats: computeStats(mergePublicOverrides(snapshotRecords, state.publicStore)),
+    records: snapshotRecords,
+    stats: computeStats(snapshotRecords),
     options: {
       pitch_statuses: PITCH_STATUS_OPTIONS,
       call_outcomes: CALL_OUTCOME_OPTIONS,
@@ -547,30 +563,27 @@ async function loadStaticRecords(preserveSelection = true) {
     updated_at: Array.isArray(snapshot) ? "" : snapshot.updated_at || "",
     source_file: Array.isArray(snapshot) ? "" : snapshot.source_file || "",
   }
+  state.mode = "static"
   applyPayload(payload, preserveSelection)
 }
 
 async function loadRecords(preserveSelection = true) {
-  if (state.mode === "api") {
-    await loadApiRecords(preserveSelection)
-    return
-  }
-
-  if (state.mode === "static") {
-    await loadStaticRecords(preserveSelection)
-    return
-  }
-
-  if (shouldPreferApiMode()) {
+  if (activeApiBase()) {
     try {
       await loadApiRecords(preserveSelection)
+      setConnectionMessage("Connected to the live CRM API.", "success")
       return
     } catch (error) {
-      console.warn("Falling back to static CRM mode.", error)
+      console.warn("Falling back to public CRM snapshot.", error)
+      setConnectionMessage("Could not connect to the live CRM API. Showing the public snapshot instead.", "error")
     }
   }
 
   await loadStaticRecords(preserveSelection)
+  if (!activeApiBase()) {
+    setConnectionMessage("Connect a live CRM API to save notes and deal updates centrally.", "")
+  }
+  setConnectionPanel(state.connectionPanelOpen || !activeApiBase())
 }
 
 function readFormUpdates() {
@@ -582,21 +595,6 @@ function readFormUpdates() {
   return updates
 }
 
-function saveStaticRecord(recordId, updates) {
-  const store = loadPublicStore()
-  const nextOverride = {
-    ...(store.overrides[recordId] || {}),
-    ...updates,
-    updated_at: nowIso(),
-  }
-  store.overrides = {
-    ...store.overrides,
-    [recordId]: nextOverride,
-  }
-  store.source_updated_at = state.publishedUpdatedAt || store.source_updated_at
-  savePublicStore(store)
-}
-
 async function saveRecord(event) {
   event.preventDefault()
   const record = selectedRecord()
@@ -604,43 +602,41 @@ async function saveRecord(event) {
     return
   }
 
-  const updates = readFormUpdates()
+  if (!hasWritableApi()) {
+    setSaveMessage("Connect the live CRM API to save changes centrally.", "error")
+    setConnectionPanel(true)
+    return
+  }
 
   elements.saveButton.disabled = true
   setSaveMessage("Saving...", "")
   try {
-    if (state.mode === "api") {
-      await fetchJson(`/api/records/${encodeURIComponent(record.record_id)}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updates),
-      })
-      await loadRecords(true)
-      setSaveMessage("Saved.", "success")
-    } else {
-      saveStaticRecord(record.record_id, updates)
-      await loadRecords(true)
-      setSaveMessage("Saved in this browser.", "success")
-    }
+    await fetchApiJson(`/api/records/${encodeURIComponent(record.record_id)}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(readFormUpdates()),
+    })
+    await loadRecords(true)
+    setSaveMessage("Saved to the shared CRM.", "success")
   } catch (error) {
     setSaveMessage("Could not save the record.", "error")
   } finally {
-    elements.saveButton.disabled = false
+    elements.saveButton.disabled = state.mode !== "api"
   }
 }
 
 async function syncRecords() {
   elements.syncButton.disabled = true
-  setSaveMessage(state.mode === "api" ? "Syncing leads from the pipeline..." : "Refreshing the published snapshot...", "")
+  setSaveMessage(state.mode === "api" ? "Syncing leads from the pipeline..." : "Refreshing the public snapshot...", "")
   try {
     if (state.mode === "api") {
-      const payload = await fetchJson("/api/sync", { method: "POST" })
+      const payload = await fetchApiJson("/api/sync", { method: "POST" })
       state.mode = "api"
       applyPayload(payload, false)
       setSaveMessage("Lead sync complete.", "success")
     } else {
       await loadStaticRecords(true)
-      setSaveMessage("Loaded the latest published snapshot. Browser changes were kept.", "success")
+      setSaveMessage("Public snapshot refreshed.", "success")
     }
   } catch (error) {
     setSaveMessage(state.mode === "api" ? "Lead sync failed." : "Snapshot refresh failed.", "error")
@@ -683,59 +679,39 @@ function exportCsv() {
   setSaveMessage("CSV exported.", "success")
 }
 
-function exportBackup() {
-  const backup = {
-    version: 1,
-    exported_at: nowIso(),
-    source_updated_at: state.publishedUpdatedAt,
-    overrides: state.publicStore.overrides || {},
+async function saveConnectionSettings() {
+  const nextConnection = {
+    baseUrl: normalizeApiBase(elements.apiBaseInput.value),
+    token: elements.apiTokenInput.value.trim(),
   }
-  const stamp = new Date().toISOString().slice(0, 10)
-  downloadBlob(`crm-browser-backup-${stamp}.json`, JSON.stringify(backup, null, 2), "application/json;charset=utf-8")
-  setSaveMessage("Browser backup exported.", "success")
-}
 
-async function importBackup(event) {
-  const file = event.target.files?.[0]
-  if (!file) {
+  if (!nextConnection.baseUrl) {
+    clearSavedConnection()
+    await loadRecords(false)
+    setConnectionMessage("Cleared the saved CRM API connection.", "success")
     return
   }
 
+  saveConnection(nextConnection)
+  setConnectionMessage("Testing the CRM API connection...", "")
   try {
-    const imported = JSON.parse(await file.text())
-    if (!imported || typeof imported !== "object" || !imported.overrides || typeof imported.overrides !== "object") {
-      throw new Error("Invalid backup payload")
-    }
-
-    const store = loadPublicStore()
-    store.overrides = {
-      ...store.overrides,
-      ...imported.overrides,
-    }
-    store.source_updated_at = state.publishedUpdatedAt || store.source_updated_at
-    savePublicStore(store)
-    await loadStaticRecords(true)
-    setSaveMessage("Browser backup imported.", "success")
+    await loadApiRecords(false)
+    setConnectionMessage("Connected to the live CRM API.", "success")
+    setConnectionPanel(false)
+    setSaveMessage("You are connected to the shared CRM now.", "success")
   } catch (error) {
-    setSaveMessage("Could not import the backup file.", "error")
-  } finally {
-    elements.importBackupInput.value = ""
-  }
-}
-
-async function resetBrowserChanges() {
-  if (!window.confirm("Reset all browser-saved CRM changes on this device?")) {
-    return
-  }
-
-  window.localStorage.removeItem(PUBLIC_STORE_KEY)
-  state.publicStore = emptyPublicStore()
-  try {
+    state.mode = "loading"
+    setConnectionMessage("Could not connect to that CRM API. Check the URL, token, and CORS settings.", "error")
     await loadStaticRecords(false)
-    setSaveMessage("Browser changes cleared.", "success")
-  } catch (error) {
-    setSaveMessage("Could not reset browser changes.", "error")
+    setConnectionPanel(true)
   }
+}
+
+async function clearConnectionSettings() {
+  clearSavedConnection()
+  elements.apiTokenInput.value = ""
+  setConnectionMessage("Cleared the saved CRM API connection.", "success")
+  await loadRecords(false)
 }
 
 function bindEvents() {
@@ -766,10 +742,9 @@ function bindEvents() {
   elements.recordForm.addEventListener("submit", saveRecord)
   elements.syncButton.addEventListener("click", syncRecords)
   elements.exportCsvButton.addEventListener("click", exportCsv)
-  elements.exportBackupButton.addEventListener("click", exportBackup)
-  elements.importBackupButton.addEventListener("click", () => elements.importBackupInput.click())
-  elements.importBackupInput.addEventListener("change", importBackup)
-  elements.resetBrowserButton.addEventListener("click", resetBrowserChanges)
+  elements.connectionToggleButton.addEventListener("click", () => setConnectionPanel(!state.connectionPanelOpen))
+  elements.saveConnectionButton.addEventListener("click", saveConnectionSettings)
+  elements.clearConnectionButton.addEventListener("click", clearConnectionSettings)
 
   window.addEventListener("keydown", (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "s") {
@@ -779,7 +754,22 @@ function bindEvents() {
   })
 }
 
+function bootstrapConnection() {
+  const urlParams = new URLSearchParams(window.location.search)
+  const queryApiBase = normalizeApiBase(urlParams.get("api") || "")
+  const savedConnection = loadSavedConnection()
+  if (queryApiBase) {
+    state.connection = {
+      baseUrl: queryApiBase,
+      token: savedConnection.token,
+    }
+    return
+  }
+  state.connection = savedConnection
+}
+
 bindEvents()
+bootstrapConnection()
 loadRecords().catch((error) => {
   console.error(error)
   setSaveMessage("Could not load CRM records.", "error")

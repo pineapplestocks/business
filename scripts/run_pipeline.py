@@ -39,10 +39,16 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--crm-output", type=Path, default=Path("data/crm_to_call.csv"), help="CRM export CSV.")
     parser.add_argument(
-        "--crm-store-output",
+        "--crm-db-output",
+        type=Path,
+        default=Path("data/crm.sqlite3"),
+        help="Central CRM SQLite database path.",
+    )
+    parser.add_argument(
+        "--crm-snapshot-output",
         type=Path,
         default=Path("data/crm_records.json"),
-        help="Persistent CRM JSON store.",
+        help="Public CRM snapshot JSON path used by the static CRM view.",
     )
     parser.add_argument("--output-root", type=Path, default=Path("generated"), help="Generated site root.")
     parser.add_argument("--site-base-url", default="", help="Public base URL for generated pages.")
@@ -121,8 +127,10 @@ def main() -> None:
             "scripts/sync_crm.py",
             "--input",
             str(args.generated_leads_output),
-            "--output",
-            str(args.crm_store_output),
+            "--db",
+            str(args.crm_db_output),
+            "--snapshot",
+            str(args.crm_snapshot_output),
         ],
     )
 

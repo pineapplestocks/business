@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -18,33 +19,56 @@ from automation.crm import (  # noqa: E402
     PITCH_STATUS_OPTIONS,
     CRM_EDITABLE_FIELDS,
     crm_stats,
-    export_crm_records_to_csv,
-    load_crm_store,
-    sync_crm_store,
-    update_crm_record,
+)
+from automation.crm_db import (  # noqa: E402
+    export_crm_database_to_csv,
+    import_json_store_to_db,
+    load_crm_store_from_db,
+    sync_crm_database,
+    update_crm_record_in_db,
+    write_public_snapshot,
 )
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Serve the simple local CRM in your browser. The CRM syncs from generated leads "
-            "and stores notes, stages, and sales results in a JSON file."
+            "Serve the CRM web app with a central SQLite-backed API. This is the shared store "
+            "you want to use instead of browser-only storage."
         )
     )
     parser.add_argument("--host", default="127.0.0.1", help="Host to bind.")
     parser.add_argument("--port", type=int, default=8765, help="Port to bind.")
     parser.add_argument("--input", type=Path, default=Path("data/leads.generated.csv"), help="Generated lead CSV.")
     parser.add_argument(
-        "--data",
+        "--db",
+        type=Path,
+        default=Path("data/crm.sqlite3"),
+        help="CRM SQLite database path.",
+    )
+    parser.add_argument(
+        "--snapshot",
         type=Path,
         default=Path("data/crm_records.json"),
-        help="CRM JSON store path.",
+        help="Public snapshot JSON path used by the static CRM view.",
     )
     parser.add_argument(
         "--include-unknown-status",
         action="store_true",
         help="Include unknown-status leads in the CRM store if they otherwise qualify.",
+    )
+    parser.add_argument(
+        "--cors-origin",
+        default="https://pineapplestocks.github.io",
+        help=(
+            "Allowed browser origin for cross-origin API requests. Use '*' to allow any origin, "
+            "or provide a comma-separated list."
+        ),
+    )
+    parser.add_argument(
+        "--api-token",
+        default=os.environ.get("CRM_API_TOKEN", ""),
+        help="Optional bearer token required for CRM API requests. Defaults to CRM_API_TOKEN env var.",
     )
     return parser.parse_args()
 
@@ -67,19 +91,42 @@ def build_handler(
     *,
     static_dir: Path,
     leads_path: Path,
-    store_path: Path,
+    db_path: Path,
+    snapshot_path: Path,
     include_unknown_status: bool,
+    cors_origin: str,
+    api_token: str,
 ):
+    allowed_origins = {origin.strip() for origin in cors_origin.split(",") if origin.strip()}
+    allow_all_origins = "*" in allowed_origins
+
     class CRMHandler(BaseHTTPRequestHandler):
         def log_message(self, format: str, *args) -> None:  # noqa: A003
             return
+
+        def _cors_origin_value(self) -> str:
+            origin = self.headers.get("Origin", "")
+            if allow_all_origins:
+                return origin or "*"
+            if origin and origin in allowed_origins:
+                return origin
+            return ""
 
         def _send_bytes(self, payload: bytes, *, status: int = 200, content_type: str = "text/plain") -> None:
             self.send_response(status)
             self.send_header("Content-Type", content_type)
             self.send_header("Content-Length", str(len(payload)))
+            self._send_cors_headers()
             self.end_headers()
             self.wfile.write(payload)
+
+        def _send_cors_headers(self) -> None:
+            origin = self._cors_origin_value()
+            if origin:
+                self.send_header("Access-Control-Allow-Origin", origin)
+                self.send_header("Vary", "Origin")
+            self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization, X-API-Token")
+            self.send_header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS")
 
         def _send_json(self, payload: dict, *, status: int = 200) -> None:
             self._send_bytes(
@@ -95,20 +142,44 @@ def build_handler(
             body = self.rfile.read(length)
             return json.loads(body.decode("utf-8"))
 
+        def _request_token(self) -> str:
+            authorization = self.headers.get("Authorization", "")
+            if authorization.startswith("Bearer "):
+                return authorization[7:].strip()
+            return self.headers.get("X-API-Token", "").strip()
+
+        def _require_api_auth(self) -> bool:
+            if not api_token:
+                return True
+            if self._request_token() == api_token:
+                return True
+            self.send_response(HTTPStatus.UNAUTHORIZED)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("WWW-Authenticate", "Bearer")
+            self._send_cors_headers()
+            payload = json.dumps({"error": "unauthorized"}, ensure_ascii=True).encode("utf-8")
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            self.wfile.write(payload)
+            return False
+
         def _sync_store(self) -> dict:
-            if not leads_path.exists():
-                empty = {"source_file": str(leads_path), "records": []}
-                return empty
-            return sync_crm_store(
-                leads_path=leads_path,
-                store_path=store_path,
-                include_unknown_status=include_unknown_status,
-            )
+            if leads_path.exists():
+                store = sync_crm_database(
+                    leads_path=leads_path,
+                    db_path=db_path,
+                    include_unknown_status=include_unknown_status,
+                )
+                write_public_snapshot(
+                    leads_path=leads_path,
+                    snapshot_path=snapshot_path,
+                    include_unknown_status=include_unknown_status,
+                )
+                return store
+            return load_crm_store_from_db(db_path)
 
         def _load_store(self) -> dict:
-            if not store_path.exists() and leads_path.exists():
-                return self._sync_store()
-            return load_crm_store(store_path)
+            return load_crm_store_from_db(db_path)
 
         def _serve_static(self, relative_path: str) -> None:
             clean = relative_path.lstrip("/") or "index.html"
@@ -130,15 +201,39 @@ def build_handler(
 
             self._send_bytes(file_path.read_bytes(), content_type=content_type)
 
+        def do_OPTIONS(self) -> None:  # noqa: N802
+            self.send_response(HTTPStatus.NO_CONTENT)
+            self._send_cors_headers()
+            self.end_headers()
+
         def do_GET(self) -> None:  # noqa: N802
             parsed = urlparse(self.path)
+
+            if parsed.path == "/api/health":
+                self._send_json({"ok": True})
+                return
+
+            if parsed.path == "/api/config":
+                self._send_json(
+                    {
+                        "auth_required": bool(api_token),
+                        "storage": "sqlite",
+                        "snapshot_path": str(snapshot_path),
+                    }
+                )
+                return
+
             if parsed.path == "/api/records":
+                if not self._require_api_auth():
+                    return
                 self._send_json(build_payload(self._load_store()))
                 return
 
             if parsed.path == "/api/export.csv":
-                temp_path = store_path.parent / ".crm_export_tmp.csv"
-                export_crm_records_to_csv(store_path, temp_path)
+                if not self._require_api_auth():
+                    return
+                temp_path = snapshot_path.parent / ".crm_export_tmp.csv"
+                export_crm_database_to_csv(db_path, temp_path)
                 self._send_bytes(temp_path.read_bytes(), content_type="text/csv; charset=utf-8")
                 temp_path.unlink(missing_ok=True)
                 return
@@ -152,6 +247,8 @@ def build_handler(
         def do_POST(self) -> None:  # noqa: N802
             parsed = urlparse(self.path)
             if parsed.path == "/api/sync":
+                if not self._require_api_auth():
+                    return
                 store = self._sync_store()
                 self._send_json(build_payload(store))
                 return
@@ -162,9 +259,12 @@ def build_handler(
             if not parsed.path.startswith("/api/records/"):
                 self.send_error(HTTPStatus.NOT_FOUND)
                 return
+            if not self._require_api_auth():
+                return
+
             record_id = unquote(parsed.path.rsplit("/", 1)[-1])
             try:
-                record = update_crm_record(store_path, record_id, self._read_json())
+                record = update_crm_record_in_db(db_path, record_id, self._read_json())
             except KeyError:
                 self.send_error(HTTPStatus.NOT_FOUND)
                 return
@@ -178,10 +278,18 @@ def main() -> None:
     static_dir = REPO_ROOT / "crm"
     static_dir.mkdir(parents=True, exist_ok=True)
 
+    if not args.db.exists() and args.snapshot.exists():
+        import_json_store_to_db(store_path=args.snapshot, db_path=args.db)
+
     if args.input.exists():
-        sync_crm_store(
+        sync_crm_database(
             leads_path=args.input,
-            store_path=args.data,
+            db_path=args.db,
+            include_unknown_status=args.include_unknown_status,
+        )
+        write_public_snapshot(
+            leads_path=args.input,
+            snapshot_path=args.snapshot,
             include_unknown_status=args.include_unknown_status,
         )
 
@@ -190,14 +298,23 @@ def main() -> None:
         build_handler(
             static_dir=static_dir,
             leads_path=args.input,
-            store_path=args.data,
+            db_path=args.db,
+            snapshot_path=args.snapshot,
             include_unknown_status=args.include_unknown_status,
+            cors_origin=args.cors_origin,
+            api_token=args.api_token,
         ),
     )
 
     print(f"CRM available at http://{args.host}:{args.port}")
     print(f"Lead source: {args.input}")
-    print(f"CRM store: {args.data}")
+    print(f"CRM database: {args.db}")
+    print(f"Public snapshot: {args.snapshot}")
+    print(f"CORS origin: {args.cors_origin}")
+    if args.api_token:
+        print("API auth: enabled")
+    else:
+        print("API auth: disabled")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

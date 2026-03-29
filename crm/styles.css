@@ -57,6 +57,8 @@ button,input,select,textarea{font:inherit}
   color:rgba(255,255,255,.72);
 }
 
+.eyebrow-dark{color:var(--muted)}
+
 .topbar h1{
   margin:0 0 10px;
   font-size:clamp(34px,5vw,52px);
@@ -109,6 +111,51 @@ button,input,select,textarea{font:inherit}
   background:rgba(255,253,249,.9);
   color:var(--ink);
   box-shadow:var(--shadow);
+}
+
+.connection-panel{
+  display:grid;
+  grid-template-columns:minmax(0, 1.1fr) minmax(0, 1.4fr);
+  gap:22px;
+  margin-top:18px;
+  padding:22px;
+}
+
+.connection-copy h2{
+  margin:0 0 10px;
+  font-size:28px;
+}
+
+.connection-grid{
+  display:grid;
+  gap:14px;
+}
+
+.connection-grid label{
+  display:grid;
+  gap:8px;
+}
+
+.connection-grid span{
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  font-weight:800;
+  color:var(--muted);
+}
+
+.connection-actions{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+.connection-buttons{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
 }
 
 .button{
@@ -329,16 +376,6 @@ textarea{
   color:#fff;
 }
 
-.pill-local{
-  background:var(--accent-soft);
-  color:var(--accent);
-}
-
-.lead-item.active .pill-local{
-  background:rgba(255,231,217,.22);
-  color:#fff;
-}
-
 .hidden{display:none}
 
 .empty-state{
@@ -452,6 +489,7 @@ textarea{
   .detail-meta .meta-grid,
   .form-grid{grid-template-columns:repeat(2,1fr)}
   .crm-layout{grid-template-columns:320px minmax(0,1fr)}
+  .connection-panel{grid-template-columns:1fr}
 }
 
 @media (max-width: 920px){

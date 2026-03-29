@@ -13,7 +13,8 @@ This repo now contains two layers:
 - Only treats leads as pitchable when they are `verified_no_website`.
 - Generates one demo website per verified no-website lead plus a directory page.
 - Exports a CRM-ready CSV for manual calling.
-- Syncs a simple local CRM store that tracks call notes, stage, follow-ups, and sales.
+- Syncs a central CRM database that tracks call notes, stage, follow-ups, and sales.
+- Writes a public CRM snapshot for the GitHub Pages view without relying on browser-only saves.
 
 ## Files
 
@@ -22,8 +23,8 @@ This repo now contains two layers:
 - `scripts/generate_sites.py`: Builds demo sites from structured lead data.
 - `scripts/export_crm.py`: Builds the outbound calling list.
 - `scripts/run_pipeline.py`: One command to scrape, verify, generate, and export.
-- `scripts/sync_crm.py`: Syncs the persistent CRM JSON store from generated leads.
-- `scripts/serve_crm.py`: Runs the simple local CRM web app.
+- `scripts/sync_crm.py`: Syncs the central CRM SQLite database and writes the public snapshot JSON.
+- `scripts/serve_crm.py`: Runs the shared CRM API and web app.
 - `samples/leads.sample.csv`: Sample lead file for generator testing.
 - `samples/queries.sample.csv`: Sample Google Maps query file.
 - `crm/`: Browser UI for the simple local CRM.
@@ -31,7 +32,7 @@ This repo now contains two layers:
 
 ## Install
 
-The generator and CRM exporter only use the Python standard library.
+The generator, CRM exporter, and CRM server use the Python standard library.
 
 The Google Maps scraper needs Playwright in a local virtualenv:
 
@@ -70,7 +71,7 @@ Run the full outbound pipeline in one command:
   --site-base-url https://pineapplestocks.github.io/business
 ```
 
-That command now also updates the persistent CRM store at `data/crm_records.json`.
+That command now also updates the central CRM database at `data/crm.sqlite3` and the public snapshot at `data/crm_records.json`.
 
 Run only the Google Maps scrape plus website verification:
 
@@ -101,27 +102,30 @@ Re-run only the website verification step for an existing lead CSV:
   --output data/leads.csv
 ```
 
-Sync the simple local CRM store from generated leads:
+Sync the central CRM database from generated leads:
 
 ```bash
 python3 scripts/sync_crm.py \
   --input data/leads.generated.csv \
-  --output data/crm_records.json
+  --db data/crm.sqlite3 \
+  --snapshot data/crm_records.json
 ```
 
-Launch the local CRM in your browser:
+Launch the shared CRM server in your browser:
 
 ```bash
 python3 scripts/serve_crm.py \
   --input data/leads.generated.csv \
-  --data data/crm_records.json
+  --db data/crm.sqlite3 \
+  --snapshot data/crm_records.json
 ```
 
 Then open `http://127.0.0.1:8765`.
 
 The same CRM UI is also published on GitHub Pages at `https://pineapplestocks.github.io/business/crm/`.
-That public page loads the published lead snapshot from `data/crm_records.json` and saves your edits in browser storage on that device.
-Use the public page when you want a lightweight hosted CRM view, and use the local server when you want the shared file-backed store.
+That public page now acts as a clean CRM client plus public snapshot viewer.
+To make it save like a real shared CRM, point it at a live `scripts/serve_crm.py` server from the `CRM Connection` panel.
+When the UI is served directly by the CRM server, it saves centrally automatically.
 
 ## Safe Defaults
 
@@ -136,12 +140,14 @@ When you are ready to publish directly into the repo root, point the generator a
 3. Review only the `needs_manual_review` rows if you want to be extra careful.
 4. Generate demo sites into `generated/` or the repo root.
 5. Export `data/crm_to_call.csv`.
-6. Open the local CRM and update `pitch_status`, `call_outcome`, notes, follow-ups, and any sale info.
+6. Open the shared CRM and update `pitch_status`, `call_outcome`, notes, follow-ups, and any sale info.
 
 ## Notes
 
 - Google Maps markup changes over time, so the scraper is written to be practical rather than guaranteed forever-stable.
 - Google Maps alone is not trusted. The pipeline also checks search results before a lead is treated as pitchable.
 - The generator and CRM export default to `verified_no_website` leads only.
-- The simple CRM is file-backed, not a hosted SaaS. Your notes live in `data/crm_records.json`.
-- The public GitHub Pages CRM is static, so its changes are stored in the browser unless you run the local CRM server.
+- The shared CRM data now lives in `data/crm.sqlite3`.
+- The public GitHub Pages snapshot in `data/crm_records.json` is for the static UI and should not be treated as your private sales database.
+- For a truly shared multi-device CRM, run `scripts/serve_crm.py` on a host you control and use that live API from the CRM UI.
+- Use `CRM_API_TOKEN` or `--api-token` if you want the live CRM API to require a bearer token.

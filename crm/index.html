@@ -16,16 +16,38 @@
       </div>
       <div class="topbar-actions">
         <span id="modeBadge" class="mode-badge hidden"></span>
+        <button id="connectionToggleButton" class="button button-secondary" type="button">CRM Connection</button>
         <button id="syncButton" class="button button-secondary" type="button">Sync Leads</button>
         <button id="exportCsvButton" class="button button-secondary" type="button">Export CSV</button>
-        <button id="exportBackupButton" class="button button-secondary hidden" type="button">Export Backup</button>
-        <button id="importBackupButton" class="button button-secondary hidden" type="button">Import Backup</button>
-        <button id="resetBrowserButton" class="button button-secondary hidden" type="button">Reset Browser Changes</button>
-        <input id="importBackupInput" class="hidden" type="file" accept="application/json">
       </div>
     </header>
 
     <section id="modeNotice" class="mode-notice hidden"></section>
+
+    <section id="connectionPanel" class="connection-panel card hidden">
+      <div class="connection-copy">
+        <p class="eyebrow eyebrow-dark">Live CRM Connection</p>
+        <h2>Point This UI At The Shared CRM API</h2>
+        <p class="subtitle subtitle-dark">Use the live API for real shared notes, deal stages, and sales updates. GitHub Pages alone can only show the public lead snapshot.</p>
+      </div>
+      <div class="connection-grid">
+        <label>
+          <span>API Base URL</span>
+          <input id="apiBaseInput" type="url" placeholder="https://crm.yourdomain.com">
+        </label>
+        <label>
+          <span>API Token</span>
+          <input id="apiTokenInput" type="password" placeholder="Bearer token if your CRM server requires one">
+        </label>
+        <div class="connection-actions">
+          <p id="connectionMessage" class="save-message"></p>
+          <div class="connection-buttons">
+            <button id="saveConnectionButton" class="button button-primary" type="button">Save Connection</button>
+            <button id="clearConnectionButton" class="button button-secondary" type="button">Clear</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="stats-row" id="statsRow"></section>
 
