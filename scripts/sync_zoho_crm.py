@@ -166,32 +166,43 @@ def _filter_leads(leads: list[Lead]) -> list[Lead]:
     ]
 
 
-def _upsert_batch(batch: list[Lead], *, access_token: str, dry_run: bool) -> tuple[int, int]:
-    """Upsert a batch of leads. Returns (created, updated)."""
-    zoho_leads = [_lead_to_zoho(lead) for lead in batch]
-    if dry_run:
-        for lead in batch:
-            print(f"  [dry-run] Would upsert: {lead.business_name} ({lead.city}, {lead.state}) — {lead.phone}")
-        return len(batch), 0
+def _fetch_existing_by_phone(access_token: str) -> dict[str, str]:
+    """Return {normalized_phone: zoho_record_id} for all leads already in Zoho."""
+    existing: dict[str, str] = {}
+    page = 1
+    while True:
+        result = _zoho_request(
+            "GET",
+            f"/Leads?fields=id,Phone&per_page=200&page={page}",
+            access_token=access_token,
+        )
+        for record in result.get("data", []):
+            phone = _normalize_phone(record.get("Phone") or "")
+            if phone:
+                existing[phone] = record["id"]
+        if not result.get("info", {}).get("more_records"):
+            break
+        page += 1
+        time.sleep(0.2)
+    return existing
 
-    payload = {"data": zoho_leads, "duplicate_check_fields": ["Phone"]}
-    result = _zoho_request("POST", "/Leads/upsert", access_token=access_token, body=payload)
 
-    created = updated = 0
-    for item in result.get("data", []):
-        action = (item.get("details") or {}).get("Modified_Time") and item.get("code") == "SUCCESS"
-        # Zoho upsert returns "RECORD_ADDED" or "RECORD_UPDATED" in message or code
-        code = item.get("code", "")
-        action = str(item.get("action", "")).lower()
-        msg = str(item.get("message", "")).lower()
-        if code == "SUCCESS":
-            if action == "update" or "duplicate" in msg or "update" in msg:
-                updated += 1
-            else:
-                created += 1
-        else:
-            print(f"  [warn] Zoho response: {item}", file=sys.stderr)
-    return created, updated
+def _create_batch(batch: list[Lead], *, access_token: str) -> int:
+    payload = {"data": [_lead_to_zoho(lead) for lead in batch]}
+    result = _zoho_request("POST", "/Leads", access_token=access_token, body=payload)
+    return sum(1 for r in result.get("data", []) if r.get("code") == "SUCCESS")
+
+
+def _update_batch(batch: list[tuple[str, Lead]], *, access_token: str) -> int:
+    """batch is list of (zoho_id, lead)."""
+    records = []
+    for zoho_id, lead in batch:
+        rec = _lead_to_zoho(lead)
+        rec["id"] = zoho_id
+        records.append(rec)
+    payload = {"data": records}
+    result = _zoho_request("PUT", "/Leads", access_token=access_token, body=payload)
+    return sum(1 for r in result.get("data", []) if r.get("code") == "SUCCESS")
 
 
 def sync(leads_path: Path, *, dry_run: bool = False, batch_size: int = 100) -> None:
@@ -204,19 +215,46 @@ def sync(leads_path: Path, *, dry_run: bool = False, batch_size: int = 100) -> N
         print("Nothing to sync.")
         return
 
-    access_token = "" if dry_run else _get_access_token()
+    if dry_run:
+        for lead in pitchable:
+            print(f"  [dry-run] {lead.business_name} ({lead.city}, {lead.state}) — {lead.phone}")
+        print(f"\n[dry-run] Would sync {len(pitchable)} leads.")
+        return
+
+    access_token = _get_access_token()
+
+    print("Fetching existing Zoho leads to detect duplicates…")
+    existing_by_phone = _fetch_existing_by_phone(access_token)
+    print(f"Found {len(existing_by_phone)} existing leads in Zoho.")
+
+    to_create: list[Lead] = []
+    to_update: list[tuple[str, Lead]] = []
+    for lead in pitchable:
+        norm = _normalize_phone(lead.phone)
+        if norm in existing_by_phone:
+            to_update.append((existing_by_phone[norm], lead))
+        else:
+            to_create.append(lead)
+
+    print(f"New leads to create: {len(to_create)} | Existing leads to update: {len(to_update)}")
 
     total_created = total_updated = 0
-    for start in range(0, len(pitchable), batch_size):
-        batch = pitchable[start: start + batch_size]
-        print(f"Syncing batch {start + 1}–{start + len(batch)} of {len(pitchable)}…")
-        created, updated = _upsert_batch(batch, access_token=access_token, dry_run=dry_run)
-        total_created += created
-        total_updated += updated
-        if not dry_run and start + batch_size < len(pitchable):
-            time.sleep(0.5)  # stay well under Zoho rate limits
 
-    print(f"\nDone. Created: {total_created} | Updated: {total_updated} | Total synced: {len(pitchable)}")
+    for start in range(0, len(to_create), batch_size):
+        batch = to_create[start: start + batch_size]
+        print(f"Creating batch {start + 1}–{start + len(batch)} of {len(to_create)}…")
+        total_created += _create_batch(batch, access_token=access_token)
+        if start + batch_size < len(to_create):
+            time.sleep(0.5)
+
+    for start in range(0, len(to_update), batch_size):
+        batch = to_update[start: start + batch_size]
+        print(f"Updating batch {start + 1}–{start + len(batch)} of {len(to_update)}…")
+        total_updated += _update_batch(batch, access_token=access_token)
+        if start + batch_size < len(to_update):
+            time.sleep(0.5)
+
+    print(f"\nDone. Created: {total_created} | Updated: {total_updated} | Total synced: {total_created + total_updated}")
 
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
