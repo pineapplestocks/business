@@ -10,6 +10,7 @@
   <meta property="og:description" content="Fast, reliable water heater repair and replacement in Aurora, CO. Same-day service available. Call (720) 555-0188.">
   <meta property="og:site_name" content="Front Range Hot Water Pros">
   <meta name="theme-color" content="#4d2c1d">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -60,6 +61,10 @@
     }
     .brand{font-weight:800;color:var(--primary)}
     .brand span{display:block;font-size:12px;font-weight:500;color:var(--muted)}
+    .nav-links{display:flex;gap:24px;list-style:none}
+    .nav-links a{font-size:14px;font-weight:600;color:var(--muted);transition:color .2s}
+    .nav-links a:hover{color:var(--primary)}
+    @media(max-width:900px){.nav-links{display:none}}
     .phone-btn,.cta-btn{
       display:inline-flex;align-items:center;justify-content:center;
       padding:14px 24px;border-radius:999px;font-weight:700
@@ -158,6 +163,13 @@
   <header>
     <div class="nav">
       <div class="brand">Front Range Hot Water Pros<span>Water Heater Repair · Aurora, CO</span></div>
+      <ul class="nav-links">
+        <li><a href="#services">Services</a></li>
+        <li><a href="#work">Our Work</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
       <a class="phone-btn" href="tel:7205550188">Call (720) 555-0188</a>
     </div>
   </header>
@@ -217,7 +229,7 @@
     </div>
   </section>
 
-  <section style="background:#f9fafb">
+  <section id="work" style="background:#f9fafb">
     <div class="wrap">
       <div class="section-head">
         <div class="tag">Our Work</div>
@@ -241,7 +253,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="contact">
     <div class="wrap split">
       <div>
         <div class="section-head">
@@ -268,7 +280,7 @@
     </div>
   </section>
 
-  <section style="background:#f9fafb">
+  <section id="reviews" style="background:#f9fafb">
     <div class="wrap">
       <div class="section-head">
         <div class="tag">Reviews</div>
@@ -295,7 +307,7 @@
     </div>
   </section>
 
-  <section>
+  <section id="faq">
     <div class="wrap">
       <div class="section-head">
         <div class="tag">FAQ</div>
@@ -341,6 +353,7 @@
   <footer>
     <div>Front Range Hot Water Pros · Water Heater Repair &amp; Replacement · Aurora, CO 80012</div>
     <div style="margin-top:8px"><a href="tel:7205550188">(720) 555-0188</a> · 917 Market Ave, Aurora, CO</div>
+    <div style="margin-top:12px;font-size:13px">&copy; 2025 Front Range Hot Water Pros. All rights reserved.</div>
   </footer>
 
   <a class="mobile-bar" href="tel:7205550188">Call Now — (720) 555-0188</a>
